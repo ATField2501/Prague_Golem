@@ -1,0 +1,3 @@
+""" Constantes du bot """
+
+
