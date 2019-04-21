@@ -97,23 +97,6 @@ def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     server.quit()
     return msg
 
-def Dico(addr):
-    """
-    Cherche la definition d'un mot donné à l'aide de l'api wikipédia
-    """
-    fichierTMP =open(".tmp_wikipedia", "w")  
-    wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
-    soft = wikipedia+addr
-    response = urllib2.urlopen(soft)     
-    obj1 = json.loads(response.read())
-    obj2 = obj1[2] 
-    obj3 = obj2[0]+obj2[2]          
-    fichierTMP.write(json.dumps(obj3))                   
-    fichierTMP.close()   
-    fichierTMP =open(".tmp_wikipedia", "r")                    
-    definition = fichierTMP.readlines()
-    return definition
-
 def Repare(ss):
     """
     Appel la methode replace() pourquoi?? Parceque les librairie que j'utilise son en 2.7. Pour les noobs comme moi; vive python3
@@ -131,7 +114,34 @@ def Repare(ss):
     ss = ss.replace('\u00c9' , "ê")
     ss = ss.replace('\u00c2' , "â")
     ss = ss.replace('\u00ea' , "ê")
+    ss = ss.replace('"' , '')          
     return ss
+
+def Dico(addr):
+    """
+    Cherche la definition d'un mot donné à l'aide de l'api wikipédia
+    """
+    ss=""
+    fichierTMP =open(".tmp_wikipedia", "w")  
+    wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
+    soft = wikipedia+addr
+    response = urllib2.urlopen(soft)     
+    obj1 = json.loads(response.read())
+    obj2 = obj1[2] 
+    obj3 = obj2[0]+obj2[2]
+    fichierTMP.write(json.dumps(obj3))                   
+    fichierTMP.close()   
+    fichierTMP =open(".tmp_wikipedia", "r")                    
+    definition = fichierTMP.readlines()
+    for line in definition:
+        ss += line
+        filtre = Repare(ss)
+        fichierTMP =open(".tmp_wikipedia", "w")  
+        fichierTMP.write(filtre) 
+        fichierTMP.close()   
+    return definition
+
+
 
 
 

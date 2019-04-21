@@ -194,20 +194,16 @@ class BotModeration(ircbot.SingleServerIRCBot):
         for dico in self.dico: # Utilise API pour deffinition des mots par wikipédia
             if dico in message:
                 try:	
-                    ss=""
                     addr = ev.arguments()[0][6:]
                     definition = Dico(addr)
-                    for line in definition:
-                        ss += line
-                    filtre = Repare(ss)
-                    fichierTMP =open(".tmp_wikipedia", "w")  
-                    fichierTMP.write(filtre) 
-                    fichierTMP.close()   
                     fichierTMP =open(".tmp_wikipedia", "r")  
-                    for line in fichierTMP:                  
-                        serv.privmsg( canal , line)  
+                    for line in fichierTMP:     
+                        longueur=len(line)    # je cherche le moyen de faire des lignes courtes 
+                        print(longueur)        
+                        serv.privmsg( canal , line[:longueur/2])  
                         time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
-
+                        serv.privmsg( canal , line[longueur/2:])  
+                        time.sleep(0.3) 
                 except Exception as e:
                     print(str(e))
                     serv.privmsg( canal ,"Erreur..")     
