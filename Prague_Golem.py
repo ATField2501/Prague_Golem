@@ -61,8 +61,16 @@ class BotModeration(ircbot.SingleServerIRCBot):
     def on_kick(self, serv, ev): # Rejoindre automatiquement le salon apres un kick
         serv.join(ev.target())  
      
-    def on_privmsg(self, serv, ev): # Quand le bot recoit un message en privé                 
-        pass
+    def on_privmsg(self, serv, ev): # Quand le bot recoit un message en privé 
+       try:   
+           auteur666 = irclib.nm_to_n(ev.source()) # On recupére l'auteur du message 
+           pigeon = ev.arguments()[0] # Ainsi que le méssage 
+           stars = ev.source()                  
+           msg = Message(auteur666 , pigeon , stars, adresse_mail , mdp_mail , botname)
+           serv.privmsg(auteur666, "::: Méssage Enregistré :::") # On réponds à la personne
+           serv.privmsg(nickperso , msg) # On informe le Maître
+       except Exception as e:
+           print(str(e))
 
     def on_pubmsg(self, serv, ev): # Quant un message est posté
         auteur = irclib.nm_to_n(ev.source())

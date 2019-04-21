@@ -1,8 +1,12 @@
+# -*- coding: utf8 
+
 """ Classes et Fonctions du bot Prague_Golem """
+
 
 import urllib2
 import json
 import random
+import smtplib
 
 def compta():  
     """
@@ -73,5 +77,22 @@ def Addson(slurP):
         ya = True                            
     elif len(slurP) != 51 or len(slurP) != 36 or len(slurP) != 60:
         fichierSon.close()           
-    return slurP , ya    
- 
+    return slurP , ya  
+
+def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
+    """
+    Envois message reçus en privé sur boit mail renseignée
+    """  
+    msg = ":::  Maître.. Je reçois un méssage  :::"
+    server = smtplib.SMTP('smtp.gmail.com' , 587)
+    message455 = stars + "    >>> " + pigeon + "\n" # On recupére le message
+    sting = open("Boite_Reception.txt", "a")
+    sting.write(message455)
+    sting.close()
+    Data = msg + message455
+    server.starttls()
+    server.login(adresse_mail , mdp_mail)
+    data = botname + "\n" + message455
+    server.sendmail(adresse_mail , adresse_mail , data)  #Envoi du message par mail
+    server.quit()
+    return msg
