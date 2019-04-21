@@ -5,9 +5,10 @@
 
 import irclib
 import ircbot
-import urllib2
+
 from Constantes_secretes import *
 from PragueConstantes import *
+from PragueClasses import *
 from BotFonctionslib import *
 
 
@@ -28,6 +29,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.conge = ["!conge"]
         self.bene = ["Prague_Golem"]
         self.http = ["http"]
+        self.iss = ["!iss"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -37,7 +39,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
 	masque_auteur = irclib.nm_to_n(ev.source())
         try:		######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
             fichier1 = open("name_visiteur.txt", "w" )
-            if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != "Prague_Golem":
+            if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
                 lacible = ev.source() + "vient de rentrait dans le temple" 
                 oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
                 fichier1.write(oulalala)
@@ -71,7 +73,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         fichierKontrol = open("Ecran_Kontrol.txt", "a" ) 
         fichierKontrol.write(kontrole)
         fichierKontrol.close()
-        # Affichage direct dans la console
+        # Sortie console
         print(kontrole)    
         
         # Commande reçus par le bot sur irc               
@@ -113,23 +115,20 @@ class BotModeration(ircbot.SingleServerIRCBot):
             try:
                if http in message:
                    cible959 = ev.arguments()[0] or ev.arguments()[0][8:]                    
-                   response555 = urllib2.urlopen(cible959)
-                   obj889 = response555.read()
-                   fichier02 =open(".tmp_recherche.txt", "w")
-                   fichier02.write(obj889)
-                   fichier02.close()
-                   with open(".tmp_recherche.txt", "r") as f:
-                       for line in f.readlines():
-                           if '<title>' in line:
-                               iioonnn = line.split('<title>')
-                               iii= iioonnn[1]
-                               ii= iii.split('</title>')                       
-                               folio=str(ii[0]) 
-                               spirale= folio.replace('&quot;' , '"')
-                               spirale= folio.replace('&#39;' , "'")
-                               serv.privmsg( canal , format(spirale))                                                                    
+                   url=Traduction(cible959)
+                   serv.privmsg( canal , url)   
             except Exception as e:
                    print(str(e))
+
+        for iss in self.iss: # utilise API pour donner position de la station spatial ISS
+            try:
+                if iss in message:
+                    position_orbitale=Iss()
+                    serv.privmsg( canal , position_orbitale) 
+            except Exception as e:
+                   print(str(e))
+                   serv.privmsg( canal ,"Erreur..")               
+                   break
 
 if __name__ == "__main__":
     BotModeration().start()
