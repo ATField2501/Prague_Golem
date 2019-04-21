@@ -17,7 +17,7 @@ echo -e "$VERT" "******************************"
 while ((i <= 10))
 do
 
-python Prahue_Golem.py >Ecran_Kontrol.txt 2>> schtrouf_log.txt & sleep 6000
+python Prague_Golem.py >Ecran_Kontrol.txt 2>> schtrouf_log.txt & sleep 6000
 killall python
 done
 
