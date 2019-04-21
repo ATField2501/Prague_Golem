@@ -18,10 +18,9 @@ print"  ---------------- "
 print"    version  1.0   "
 
 
-
 class BotModeration(ircbot.SingleServerIRCBot):
     def __init__(self): 
-        ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp)] , 
+        ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
         ## Variables propre à l'objet
         self.goto = ["!goto"]
@@ -30,6 +29,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.bene = ["Prague_Golem"]
         self.http = ["http"]
         self.iss = ["!iss"]
+        self.son = ["!son"]
+        self.addson = ["!addson"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -112,23 +113,54 @@ class BotModeration(ircbot.SingleServerIRCBot):
                    print(str(e))
 
         for http in self.http:     #traduis les url youtube et autres en titres de chansons...                          
-            try:
-               if http in message:
+            if http in message:
+               try:
                    cible959 = ev.arguments()[0] or ev.arguments()[0][8:]                    
                    url=Traduction(cible959)
                    serv.privmsg( canal , url)   
-            except Exception as e:
-                   print(str(e))
+               except: 
+                   pass ## Ne fais rien et évite de levé une erreur avec la fonction Addson           
 
         for iss in self.iss: # utilise API pour donner position de la station spatial ISS
-            try:
-                if iss in message:
+            if iss in message:
+               try:
                     position_orbitale=Iss()
                     serv.privmsg( canal , position_orbitale) 
-            except Exception as e:
-                   print(str(e))
-                   serv.privmsg( canal ,"Erreur..")               
-                   break
+               except Exception as e:
+                    print(str(e))
+                    serv.privmsg( canal ,"Erreur..")               
+
+
+        for son in self.son: # Fait tomber une url youtube au hasard
+            if son in message:
+                try:
+                    serv.privmsg( canal , " * son *")
+                    musique= Son()
+                    serv.privmsg( canal , musique)
+                    cible959=musique
+                    titre=Traduction(cible959) 
+                    serv.privmsg( canal , titre)      
+                except Exception as e:
+                    print(str(e))
+                    serv.privmsg( canal ,"Erreur..") 
+  
+
+        for addson in self.addson: # Ajoute une url youtube au fichier
+            if addson in message:
+                try:
+                    slurP = ev.arguments()[0][8:]+ "\n"
+                    serv.privmsg( canal , slurP)
+                    musique, ya = Addson(slurP) 
+                    if ya == True:
+                        serv.privmsg( canal , " * addson *") 
+                        cible959=musique
+                        titre=Traduction(cible959)
+                        serv.privmsg( canal , titre)  
+                    else:
+                        serv.privmsg( canal , " * Mauvaise entree *")       
+                except Exception as e:
+                    print(str(e))
+
 
 if __name__ == "__main__":
     BotModeration().start()
