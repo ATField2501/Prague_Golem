@@ -26,7 +26,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.goto = ["!goto"]
         self.die = ["!die"]
         self.conge = ["!conge"]
-        self.bene = [botname]
+        self.bene = ["Prague_Golem"]
         self.http = ["http"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
@@ -35,32 +35,23 @@ class BotModeration(ircbot.SingleServerIRCBot):
 
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
-        try:															
+        try:		######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
             fichier1 = open("name_visiteur.txt", "w" )
-            if ev.target() == "#Cthulhu" and irclib.nm_to_n(ev.source()) != "Prague_Golem":
+            if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != "Prague_Golem":
                 lacible = ev.source() + "vient de rentrait dans le temple" 
                 oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
                 fichier1.write(oulalala)
                 fichier1.close() 
-                fichierVisit = open("Visiteurs.txt", "r") #Repertoire des visiteurs du canal
-                chaine = irclib.nm_to_n(ev.source())
-                str(chaine)
-            for line in fichierVisit.readlines()[0]:
-                if chaine in line and ev.target() == "#Cthulhu":   #Ecrire l'entrée seulement si non présente dans le fichier                
-                     fichierVisit.close                
-                elif chaine not in line and ev.target() == "#Cthulhu":
-                    fichierVisit = open("Visiteurs.txt", "a")
-                    fichierVisit.write(irclib.nm_to_n(ev.source()) + "\n")
-                    fichierVisit.close  
-                    break
-            rar44 = open("name_visiteur.txt", "r")
-            visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
-            serv.privmsg("#lymbes" , lacible)
-            kiku =  open("Ecran_Kontrol.txt", "a")           
-            kiku.write(visiteur)
-            kiku.close()
-            print(visiteur)
-            serv.privmsg("#Cthulhu",visiteur)
+                rar44 = open("name_visiteur.txt", "r")
+                visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
+                serv.privmsg("#lymbes" , lacible)
+                kiku =  open("Ecran_Kontrol.txt", "a")           
+                kiku.write(visiteur)
+                kiku.close()
+                # sortie console
+                print(visiteur)
+                # sortie irc
+                serv.privmsg("#Cthulhu",visiteur)
         except Exception as e:
                 print(str(e))
   
