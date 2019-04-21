@@ -5,6 +5,7 @@
 
 import irclib
 import ircbot
+import time
 
 from Constantes_secretes import *
 from PragueConstantes import *
@@ -32,6 +33,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.son = ["!son"]
         self.addson = ["!addson"]
         self.tson = ["!tson"]
+        self.dico = ["!dico"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -188,6 +190,27 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     print(str(e))
                     serv.privmsg( canal ,"Erreur..") 
+
+        for dico in self.dico: # Utilise API pour deffinition des mots par wikipédia
+            if dico in message:
+                try:	
+                    ss=""
+                    addr = ev.arguments()[0][6:]
+                    definition = Dico(addr)
+                    for line in definition:
+                        ss += line
+                    filtre = Repare(ss)
+                    fichierTMP =open(".tmp_wikipedia", "w")  
+                    fichierTMP.write(filtre) 
+                    fichierTMP.close()   
+                    fichierTMP =open(".tmp_wikipedia", "r")  
+                    for line in fichierTMP:                  
+                        serv.privmsg( canal , line)  
+                        time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
+
+                except Exception as e:
+                    print(str(e))
+                    serv.privmsg( canal ,"Erreur..")     
 
 
 if __name__ == "__main__":
