@@ -31,6 +31,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.iss = ["!iss"]
         self.son = ["!son"]
         self.addson = ["!addson"]
+        self.tson = ["!tson"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -177,6 +178,16 @@ class BotModeration(ircbot.SingleServerIRCBot):
                         serv.privmsg( canal , " * Mauvaise entree *")       
                 except Exception as e:
                     print(str(e))
+
+        for tson in self.tson:
+            if tson in message:
+                try:                
+                    serv.privmsg( canal , " * Totalson *")
+                    total = compta()
+                    serv.privmsg( canal , total)    
+                except Exception as e:
+                    print(str(e))
+                    serv.privmsg( canal ,"Erreur..") 
 
 
 if __name__ == "__main__":
