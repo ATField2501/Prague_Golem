@@ -38,6 +38,15 @@ class BotModeration(ircbot.SingleServerIRCBot):
 
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
+
+        try:  ## Si kk tente de pénétrer sur le chan # lymbes, on le refoule
+           if ev.target() == "#lymbes" and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
+              serv.kick("#lymbes", masque_auteur, 'Les Lymbes vous sont interdites, réjouissez-vous.')
+              serv.privmsg("#lymbes" , ":::    ..... - (;,,;) - .....    :::") 
+              serv.privmsg("#lymbes" , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+        except:
+              serv.privmsg("#lymbes" , "je n'ai pas les niveaux de privilège requis pour effectuer le kick..") 
+
         try:		######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
             fichier1 = open("name_visiteur.txt", "w" )
             if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
