@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/python2.7
 # -*- coding: utf8 
 # Bot IRC <atfield2501@gmail.com>
 
 
 import irclib
 import ircbot
-import time
+
 
 from Constantes_secretes import *
 from PragueConstantes import *
@@ -27,13 +27,18 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.goto = ["!goto"]
         self.die = ["!die"]
         self.conge = ["!conge"]
-        self.bene = ["Prague_Golem"]
+        self.bene = ["!help"]
         self.http = ["http"]
         self.iss = ["!iss"]
         self.son = ["!son"]
         self.addson = ["!addson"]
         self.tson = ["!tson"]
         self.dico = ["!dico"]
+        self.lame1 = ["!lame_1"]
+        self.lame2 = ["!lame_2"]
+        self.lame3 = ["!lame_3"]
+        self.lame4 = ["!lame_4"]
+        self.lame5 = ["!lame_5"]
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -51,24 +56,26 @@ class BotModeration(ircbot.SingleServerIRCBot):
               serv.privmsg("#lymbes" , "je n'ai pas les niveaux de privilège requis pour effectuer le kick..") 
 
         try:		######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
-            fichier1 = open("name_visiteur.txt", "w" )
+            fichier1 = open("/tmp/name_visiteur.txt", "w" )
             if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
                 lacible = ev.source() + "vient de rentrait dans le temple" 
                 oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
                 fichier1.write(oulalala)
                 fichier1.close() 
-                rar44 = open("name_visiteur.txt", "r")
+                rar44 = open("/tmp/name_visiteur.txt", "r")
                 visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
                 serv.privmsg("#lymbes" , lacible)
-                kiku =  open("Ecran_Kontrol.txt", "a")           
-                kiku.write(visiteur)
-                kiku.close()
+                # Ecriture dans le fichier Ecran_Kontrol
+                Ecriture(visiteur)
                 # sortie console
                 print(visiteur)
                 # sortie irc
                 serv.privmsg("#Cthulhu",visiteur)
         except Exception as e:
-                print(str(e))
+                error = str(e)
+                # Sortie log
+                Log(error)
+
   
     def on_kick(self, serv, ev): # Rejoindre automatiquement le salon apres un kick
         serv.join(ev.target())  
@@ -77,12 +84,15 @@ class BotModeration(ircbot.SingleServerIRCBot):
        try:   
            auteur666 = irclib.nm_to_n(ev.source()) # On recupére l'auteur du message 
            pigeon = ev.arguments()[0] # Ainsi que le méssage 
-           stars = ev.source()                  
+           stars = ev.source() 
+           ## Appel de la fonction Message() 
            msg = Message(auteur666 , pigeon , stars, adresse_mail , mdp_mail , botname)
            serv.privmsg(auteur666, "::: Méssage Enregistré :::") # On réponds à la personne
            serv.privmsg(nickperso , msg) # On informe le Maître
        except Exception as e:
-           print(str(e))
+           error = str(e)
+           # Sortie log
+           Log(error)
 
     def on_pubmsg(self, serv, ev): # Quant un message est posté
         auteur = irclib.nm_to_n(ev.source())
@@ -91,11 +101,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
         masque_auteur = ev.source()
         # Ecriture de tous les posts dans un fichier  
         kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
-        fichierKontrol = open("Ecran_Kontrol.txt", "a" ) 
-        fichierKontrol.write(kontrole)
-        fichierKontrol.close()
-        # Sortie console
-        print(kontrole)    
+        # Ecriture dans le fichier Ecran_Kontrol
+        Ecriture(kontrole)   
         
         # Commande reçus par le bot sur irc               
         for goto in self.goto:
@@ -119,19 +126,24 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 serv.part(canal, message='::::  (;,,;)  ::::')
             elif conge in message and not irclib.mask_matches(masque_auteur, masque_perso):               
                 serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
-
+           
+           
         ## petit bug sur celle-là
         for bene in self.bene:    #Réagi à son nom pour indiquer qu'il n'est pas humain et donner la liste de ses commandes...
             if bene in message:
                print("  OK ")
                try:
                    serv.privmsg( canal ,"::: je ne suis qu'un bot :::")
-                   with open("fichier_help.txt") as helpyou:
+                   with open("/home/cagliostro/Documents/Prague_Golem/fichier_help.txt") as helpyou:
 	               for line in helpyou:                                        
-                           serv.privmsg( canal , line)
+                           serv.privmsg( auteur , line)
                except Exception as e:
-                   print(str(e))
+                   error = str(e)
+                   # Sortie log
+                   Log(error)
 
+
+                   
         for http in self.http:     #traduis les url youtube et autres en titres de chansons...                          
             if http in message:
                try:
@@ -147,8 +159,10 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     position_orbitale=Iss()
                     serv.privmsg( canal , position_orbitale) 
                except Exception as e:
-                    print(str(e))
                     serv.privmsg( canal ,"Erreur..")               
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
 
 
         for son in self.son: # Fait tomber une url youtube au hasard
@@ -161,8 +175,13 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     titre=Traduction(cible959) 
                     serv.privmsg( canal , titre)      
                 except Exception as e:
-                    print(str(e))
                     serv.privmsg( canal ,"Erreur..") 
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+
+
+
   
 
         for addson in self.addson: # Ajoute une url youtube au fichier
@@ -179,7 +198,11 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     else:
                         serv.privmsg( canal , " * Mauvaise entree *")       
                 except Exception as e:
-                    print(str(e))
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+
+
 
         for tson in self.tson:
             if tson in message:
@@ -188,7 +211,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     total = compta()
                     serv.privmsg( canal , total)    
                 except Exception as e:
-                    print(str(e))
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
                     serv.privmsg( canal ,"Erreur..") 
 
         for dico in self.dico: # Utilise API pour deffinition des mots par wikipédia
@@ -196,21 +221,87 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 try:	
                     addr = ev.arguments()[0][6:]
                     definition = Dico(addr)
-                    fichierTMP =open(".tmp_wikipedia", "r")  
+                    fichierTMP =open("/tmp/tmp_wikipedia", "r")  
                     for line in fichierTMP:     
-                        longueur=len(line)    # je cherche le moyen de faire des lignes courtes 
-                        print(longueur)        
+                        longueur=len(line)    # je cherche le moyen de faire des lignes courtes         
                         serv.privmsg( canal , line[:longueur/2])  
                         time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
                         serv.privmsg( canal , line[longueur/2:])  
                         time.sleep(0.3) 
                 except Exception as e:
-                    print(str(e))
+                    error = str(e)
+                    # Sortie log
+                    Log(error)     
                     serv.privmsg( canal ,"Erreur..")     
 
+        for lame1 in self.lame1:
+            if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii01.txt") as ll:
+                        for line in ll:
+                            serv.privmsg(cible, line)
+                except Exception as e:
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+              
+
+        for lame2 in self.lame2:
+            if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii02.txt") as ll:
+                        for line in ll:
+                            serv.privmsg(cible, line)
+                except Exception as e:
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+
+                
+
+        for lame3 in self.lame3:
+            if lame3 in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii03.txt") as ll:
+                        for line in ll:
+                            serv.privmsg(cible, line)
+                except Exception as e:
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+                 
+        for lame4 in self.lame4:
+            if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii04.txt") as ll:
+                        for line in ll:
+                            serv.privmsg(cible, line)
+                except Exception as e:
+                    error = str(e)
+                    # Sortie log
+                    Log(error)
+
+                  
+
+        for lame5 in self.lame5:
+            if lame5 in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii05.txt") as ll:
+                        for line in ll:
+                            serv.privmsg(cible, line)
+                except Exception as e:
+                     error = str(e)
+                     # Sortie log
+                     Log(error)
+                   
 
 if __name__ == "__main__":
     BotModeration().start()
 
 
-    
+ 
