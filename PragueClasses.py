@@ -8,6 +8,8 @@ import json
 import random
 import smtplib
 
+date=time.strftime("%A %d %B %Y %H:%M:%S")
+
 def compta():  
     """
     Compte les lignes du fichier ListeAddSon.txt
@@ -141,15 +143,17 @@ def Dico(addr):
         fichierTMP.close()   
     return definition
 
+class Ecriture():
+    def __init__ (self):
+        """ Prends en charge l'ecriture des messages """
 
-def Log(error):
-    """ Ecriture des erreurs dans le fichier log"""
-    with open("/home/cagliostro/bureau/Prague_Golem_log.txt") as log:
-        log.write(error)
+    def ecriture(self,*arg):
+        """ Ecriture de ce que le bot vois dans le fichier Ecran_Kontrol"""
+        with open("/home/cagliostro/Bureau/Ecran_Kontrol" , "a") as ecran_k:
+            ecran_k.write(date+'-'+arg[0])
 
-def Ecriture(*arg):
-    """ Ecritutre de ce que le bot vois dans le fichier Ecran_Kontrol"""
-    with open("/home/cagliostro/Bureau/Ecran_Kontrol" , "a") as ecran_k:
-        ecran_k.write(arg[0])
-
-
+    def mylog(self,error):
+        """ Ecriture des erreurs dans le fichier log"""
+        with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
+            log.write(date+'-'+error)
+       

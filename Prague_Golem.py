@@ -2,10 +2,10 @@
 # -*- coding: utf8 
 # Bot IRC <atfield2501@gmail.com>
 
-
+import os
 import irclib
 import ircbot
-
+import time
 
 from Constantes_secretes import *
 from PragueConstantes import *
@@ -18,8 +18,8 @@ print"  - Prague_Golem - "
 print"  ---------------- "
 print"    version  1.0   "
 
-
 class BotModeration(ircbot.SingleServerIRCBot):
+    supra = Ecriture()
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
@@ -39,6 +39,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.lame3 = ["!lame_3"]
         self.lame4 = ["!lame_4"]
         self.lame5 = ["!lame_5"]
+        self.oracle = ["!oracle"]
+
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
@@ -74,7 +76,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         except Exception as e:
                 error = str(e)
                 # Sortie log
-                Log(error)
+                BotModeration.supra.mylog(error)
 
   
     def on_kick(self, serv, ev): # Rejoindre automatiquement le salon apres un kick
@@ -92,17 +94,19 @@ class BotModeration(ircbot.SingleServerIRCBot):
        except Exception as e:
            error = str(e)
            # Sortie log
-           Log(error)
+           BotModeration.supra.mylog(error)
 
     def on_pubmsg(self, serv, ev): # Quant un message est posté
+        
         auteur = irclib.nm_to_n(ev.source())
         canal = ev.target()
         message = ev.arguments()[0].lower() 
         masque_auteur = ev.source()
+
         # Ecriture de tous les posts dans un fichier  
         kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
         # Ecriture dans le fichier Ecran_Kontrol
-        Ecriture(kontrole)   
+        BotModeration.supra.ecriture(kontrole)   
         
         # Commande reçus par le bot sur irc               
         for goto in self.goto:
@@ -128,20 +132,18 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
            
            
-        ## petit bug sur celle-là
+
         for bene in self.bene:    #Réagi à son nom pour indiquer qu'il n'est pas humain et donner la liste de ses commandes...
             if bene in message:
-               print("  OK ")
                try:
                    serv.privmsg( canal ,"::: je ne suis qu'un bot :::")
                    with open("/home/cagliostro/Documents/Prague_Golem/fichier_help.txt") as helpyou:
-	               for line in helpyou:                                        
+                       for line in helpyou:                                        
                            serv.privmsg( auteur , line)
                except Exception as e:
                    error = str(e)
                    # Sortie log
-                   Log(error)
-
+                   BotModeration.supra.mylog(error) 
 
                    
         for http in self.http:     #traduis les url youtube et autres en titres de chansons...                          
@@ -162,8 +164,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     serv.privmsg( canal ,"Erreur..")               
                     error = str(e)
                     # Sortie log
-                    Log(error)
-
+                    BotModeration.supra.mylog(error) 
 
         for son in self.son: # Fait tomber une url youtube au hasard
             if son in message:
@@ -178,11 +179,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     serv.privmsg( canal ,"Erreur..") 
                     error = str(e)
                     # Sortie log
-                    Log(error)
-
-
-
-  
+                    BotModeration.supra.mylog(error) 
 
         for addson in self.addson: # Ajoute une url youtube au fichier
             if addson in message:
@@ -200,9 +197,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
-
-
+                    BotModeration.supra.mylog(error) 
 
         for tson in self.tson:
             if tson in message:
@@ -213,7 +208,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
+                    BotModeration.supra.mylog(error)           
                     serv.privmsg( canal ,"Erreur..") 
 
         for dico in self.dico: # Utilise API pour deffinition des mots par wikipédia
@@ -231,7 +226,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)     
+                    BotModeration.supra.mylog(error)    
                     serv.privmsg( canal ,"Erreur..")     
 
         for lame1 in self.lame1:
@@ -244,8 +239,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
-              
+                    BotModeration.supra.mylog(error)              
 
         for lame2 in self.lame2:
             if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -257,7 +251,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
+                    BotModeration.supra.mylog(error)
 
                 
 
@@ -271,7 +265,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
+                    BotModeration.supra.mylog(error)
                  
         for lame4 in self.lame4:
             if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -283,8 +277,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    Log(error)
-
+                    BotModeration.supra.mylog(error)
                   
 
         for lame5 in self.lame5:
@@ -295,13 +288,35 @@ class BotModeration(ircbot.SingleServerIRCBot):
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:
+                     serv.privmsg(canal,"* Impossible *")
                      error = str(e)
                      # Sortie log
-                     Log(error)
-                   
+                     BotModeration.supra.mylog(error)
+
+
+
+
+        for oracle in self.oracle:
+            if oracle in message and irclib.mask_matches(masque_auteur,masque_perso):
+                try:
+                    cible = ev.arguments()[0][8:]
+                    serv.privmsg(canal,"cible : "+str(cible))
+                    os.system('caglioOracle -o > /tmp/tmp_Oracle.txt')
+                    with open("/tmp/tmp_Oracle.txt","r") as wheed:
+                        for line in wheed:
+                            serv.privmsg(cible, line)
+                            time.sleep(0.8)
+                except Exception as e:
+                     serv.privmsg(canal,"* Impossible *")
+                     error = str(e)
+                     print(e)
+                     # Sortie log
+                     BotModeration.supra.mylog(error)
+
+
+
 
 if __name__ == "__main__":
     BotModeration().start()
 
 
- 
