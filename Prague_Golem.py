@@ -68,7 +68,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
                 serv.privmsg("#lymbes" , lacible)
                 # Ecriture dans le fichier Ecran_Kontrol
-                Ecriture(visiteur)
+                BotModeration.supra.ecriture(visiteur)
                 # sortie console
                 print(visiteur)
                 # sortie irc

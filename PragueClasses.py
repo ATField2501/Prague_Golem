@@ -155,5 +155,5 @@ class Ecriture():
     def mylog(self,error):
         """ Ecriture des erreurs dans le fichier log"""
         with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
-            log.write(date+'-'+error)
+            log.write(date+'-'+error+"\n")
        
