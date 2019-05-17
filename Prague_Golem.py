@@ -301,7 +301,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 try:
                     cible = ev.arguments()[0][8:]
                     serv.privmsg(canal,"cible : "+str(cible))
-                    os.system('caglioOracle -o > /tmp/tmp_Oracle.txt')
+                #    os.chdir("/home/cagliostro/Caglio-Scripts/")
+                    os.system('python3 /home/cagliostro/Documents/Caglio-TaoTeKing/CaglioOracle.py -o > /tmp/tmp_Oracle.txt')
                     with open("/tmp/tmp_Oracle.txt","r") as wheed:
                         for line in wheed:
                             serv.privmsg(cible, line)
