@@ -170,11 +170,18 @@ class Ecriture():
         """ Ecriture des erreurs dans le fichier log"""
         with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
             log.write(date+'-'+error+"\n")
+
     def recenssement(self,*arg):
         """ Recensse les visiteurs sur le chan """
+        presente = False
         with open("/home/cagliostro/Bureau/PragueGolem_recenssement" , "r") as ecran_re:
-            for i in ecran_re:
-                if e != arg[0]:
-                    with open("/home/cagliosto/Bureau/PragueGolem_recenssement","a") as ecran_re:
-                        ecran_re.write(arg[0])
+            f=ecran_re.readlines()
+    
+            for e in f:
+                if e.rstrip() == arg[0]:
+                    presente = True
+    
+        if presente == False:
+            with open("/home/cagliostro/Bureau/PragueGolem_recenssement","a") as ecran_:
+                ecran_.write(arg[0])
                 
