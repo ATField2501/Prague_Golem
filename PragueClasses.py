@@ -73,13 +73,31 @@ def Addson(slurP):
     Ajoute une entree au fichier en verifiant la longueur de la chaîne
     """
     ya=False
+    presente = False
+    boZon = open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt","r")
+    f=boZon.readlines()
+    
+    for e in f:
+        print(e,slurP)
+        if e.rstrip() == slurP.rstrip():
+            presente = True
+            print('OK', presente)
+    boZon.close()        
     fichierSon =  open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt", "a")                 
-    if len(slurP) <= 200:
-        fichierSon.write(slurP)  
-        ya = True                            
-    else:
-        fichierSon.close()           
-    return slurP , ya  
+    print(slurP)
+    print(presente)
+    try:
+        if presente == False:
+            if len(slurP) <= 200:
+                fichierSon.write(slurP)  
+                ya = True                            
+        else:
+            fichierSon.close()           
+    except Exception as e:
+        print(str(e))
+ 
+    return slurP , ya , presente     
+        
 
 def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     """
@@ -156,4 +174,11 @@ class Ecriture():
         """ Ecriture des erreurs dans le fichier log"""
         with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
             log.write(date+'-'+error+"\n")
-       
+    def recenssement(self,*arg):
+        """ Recensse les visiteurs sur le chan """
+        with open("/home/cagliostro/Bureau/PragueGolem_recenssement" , "r") as ecran_re:
+            for i in ecran_re:
+                if e != arg[0]:
+                    with open("/home/cagliosto/Bureau/PragueGolem_recenssement","a") as ecran_re:
+                        ecran_re.write(arg[0])
+                

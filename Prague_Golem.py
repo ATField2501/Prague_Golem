@@ -45,6 +45,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
         serv.join("#lymbes" , 'dead')  
+#        serv.join(chan2)
 
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
@@ -69,6 +70,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 serv.privmsg("#lymbes" , lacible)
                 # Ecriture dans le fichier Ecran_Kontrol
                 BotModeration.supra.ecriture(visiteur)
+                # Ecriture recenssement
+                BotModeration.supra.recenssement(ev.source())
                 # sortie console
                 print(visiteur)
                 # sortie irc
@@ -186,16 +189,19 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 try:
                     slurP = ev.arguments()[0][8:]+ "\n"
                     serv.privmsg( canal , slurP)
-                    musique, ya = Addson(slurP) 
+                    musique, ya , presente= Addson(slurP) 
                     if ya == True:
                         serv.privmsg( canal , " * addson *") 
                         cible959=musique
                         titre=Traduction(cible959)
-                        serv.privmsg( canal , titre)  
+                        serv.privmsg( canal , titre)     
                     else:
-                        serv.privmsg( canal , " * Mauvaise entree *")       
+                        serv.privmsg( canal , " * Mauvaise entree *")    
+                    if presente == True:
+                        serv.privmsg(canal, " * url déjà présente dans la bdd *")
                 except Exception as e:
                     error = str(e)
+                    print(error)
                     # Sortie log
                     BotModeration.supra.mylog(error) 
 
