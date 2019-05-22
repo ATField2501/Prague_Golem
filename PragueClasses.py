@@ -78,14 +78,10 @@ def Addson(slurP):
     f=boZon.readlines()
     
     for e in f:
-        print(e,slurP)
         if e.rstrip() == slurP.rstrip():
             presente = True
-            print('OK', presente)
     boZon.close()        
     fichierSon =  open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt", "a")                 
-    print(slurP)
-    print(presente)
     try:
         if presente == False:
             if len(slurP) <= 200:

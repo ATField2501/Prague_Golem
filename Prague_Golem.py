@@ -71,6 +71,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 # Ecriture dans le fichier Ecran_Kontrol
                 BotModeration.supra.ecriture(visiteur)
                 # Ecriture recenssement
+                print(ev.source())
                 BotModeration.supra.recenssement(ev.source())
                 # sortie console
                 print(visiteur)
