@@ -173,15 +173,19 @@ class Ecriture():
 
     def recenssement(self,*arg):
         """ Recensse les visiteurs sur le chan """
-        presente = False
-        with open("/home/cagliostro/Bureau/PragueGolem_recenssement" , "r") as ecran_re:
-            f=ecran_re.readlines()
-    
-            for e in f:
-                if e.rstrip() == arg[0]:
-                    presente = True
-    
-        if presente == False:
+        self.presente = False
+        print(arg[0])
+        try:
+            with open("/home/cagliostro/Bureau/PragueGolem_recenssement" , "r") as ecran_re:
+                f=ecran_re.readlines() 
+                for e in f:
+                    if e.strip() == arg[0]:
+                        self.presente = True
+        except IOError as e:
+            print(str(e))
+            pass
+
+        if self.presente == False:
             with open("/home/cagliostro/Bureau/PragueGolem_recenssement","a") as ecran_:
-                ecran_.write(arg[0])
+                ecran_.write(arg[0]+"\n ")
                 
