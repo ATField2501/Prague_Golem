@@ -45,7 +45,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
         serv.join("#lymbes" , 'dead')  
-#        serv.join(chan2)
+        serv.join(chan2)
 
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
@@ -58,8 +58,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
         except:
               serv.privmsg("#lymbes" , "je n'ai pas les niveaux de privilège requis pour effectuer le kick..") 
 
-        try:		######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
-            fichier1 = open("/tmp/name_visiteur.txt", "w" )
+        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
+        fichier1 = open("/tmp/name_visiteur.txt", "w" )
+        try:
             if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
                 lacible = ev.source() + "vient de rentrait dans le temple" 
                 oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
@@ -71,8 +72,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 # Ecriture dans le fichier Ecran_Kontrol
                 BotModeration.supra.ecriture(visiteur)
                 # Ecriture recenssement
-#                print(irclib.nm_to_n(ev.source()))
-                BotModeration.supra.recenssement(irclib.nm_to_n(ev.source()))
+                BotModeration.supra.recenssement(irclib.nm_to_n(ev.source())) 
                 # sortie console
                 print(visiteur)
                 # sortie irc
@@ -81,8 +81,15 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 error = str(e)
                 # Sortie log
                 BotModeration.supra.mylog(error)
+                print(str(e))
 
-  
+    def get_version(self,serv,ev):
+        serv.privmsg("","- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - atfield2501.free.fr")
+ 
+    def on_nick(self,sev,ev):
+        # Ecriture recenssement
+        BotModeration.supra.recenssement(irclib.nm_to_n(ev.source())) 
+
     def on_kick(self, serv, ev): # Rejoindre automatiquement le salon apres un kick
         serv.join(ev.target())  
      
@@ -308,7 +315,6 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 try:
                     cible = ev.arguments()[0][8:]
                     serv.privmsg(canal,"cible : "+str(cible))
-                #    os.chdir("/home/cagliostro/Caglio-Scripts/")
                     os.system('python3 /home/cagliostro/Documents/Caglio-TaoTeKing/CaglioOracle.py -o > /tmp/tmp_Oracle.txt')
                     with open("/tmp/tmp_Oracle.txt","r") as wheed:
                         for line in wheed:
