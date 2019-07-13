@@ -18,17 +18,14 @@ class Prague_Connexion():
 
     except Exception as e:
         print("connexion impossible . . . Cause: "+str(e))
-            
-    
 
     def Ecriture_messages(self,*args):
         """ Ecriture dans la table flux des messages posté sur les chan ou le bot est présent """
         try:
             # Ecriture dans la bdd
-            self.trame = "INSERT INTO flux (messages,auteur,canal) VALUE (%s,%s,%s);"
-            
+            self.trame = " INSERT INTO flux (time1,time2,messages,auteur,canal) VALUE (curdate(),current_time(),%s,%s,%s);"
             self.cursor.execute(self.trame,(args[0],args[1],args[2]))
-            self.cursor.execute(""" COMMIT """) 
+            self.cursor.execute(""" COMMIT """)
             print("-- ECRITURE      --  OK")
         except Exception as e:
             print("Ecriture Impossible. Cause: "+str(e))
