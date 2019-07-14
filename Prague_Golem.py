@@ -11,6 +11,9 @@ from Constantes_secretes import *
 from PragueConstantes import *
 from PragueClasses import *
 from BotFonctionslib import *
+from Prague_bdd_sql import * 
+
+
 
 
 print"  ---------------- "
@@ -20,6 +23,9 @@ print"    version  1.0   "
 
 class BotModeration(ircbot.SingleServerIRCBot):
     supra = Ecriture()
+    # Initialisation de la base de données
+    bdd = Prague_Connexion()
+
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
@@ -40,8 +46,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.lame4 = ["!lame_4"]
         self.lame5 = ["!lame_5"]
         self.oracle = ["!oracle"]
+        self.ultimatum = ["!ultimatum"]
 
-
+        
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
         serv.join("#lymbes" , 'dead')  
@@ -107,6 +114,17 @@ class BotModeration(ircbot.SingleServerIRCBot):
            # Sortie log
            BotModeration.supra.mylog(error)
 
+
+    def on_action(self, serv, ev):
+        """ Quant un utilisteur fait une action """
+        auteur = irclib.nm_to_n(ev.source())
+        canal = ev.target()
+        message = "[Action] "+ev.arguments()[0].lower() 
+        masque_auteur = ev.source()
+        # Ecriture dans la bdd sql
+        BotModeration.bdd.Ecriture_messages(message,auteur,canal)
+
+
     def on_pubmsg(self, serv, ev): # Quant un message est posté
         
         auteur = irclib.nm_to_n(ev.source())
@@ -118,7 +136,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
         kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
         # Ecriture dans le fichier Ecran_Kontrol
         BotModeration.supra.ecriture(kontrole)   
-        
+        # Ecriture dans la bdd sql
+        BotModeration.bdd.Ecriture_messages(message,auteur,canal)
+
         # Commande reçus par le bot sur irc               
         for goto in self.goto:
             if goto in message and irclib.mask_matches(masque_auteur, masque_perso):               
@@ -236,12 +256,12 @@ class BotModeration(ircbot.SingleServerIRCBot):
                         serv.privmsg( canal , line[:longueur/2])  
                         time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
                         serv.privmsg( canal , line[longueur/2:])  
-                        time.sleep(0.3) 
+                        time.sleep(0.3)
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    BotModeration.supra.mylog(error)    
-                    serv.privmsg( canal ,"Erreur..")     
+                    BotModeration.supra.mylog(error)
+                    serv.privmsg( canal ,"Erreur..")
 
         for lame1 in self.lame1:
             if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -253,7 +273,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 except Exception as e:
                     error = str(e)
                     # Sortie log
-                    BotModeration.supra.mylog(error)              
+                    BotModeration.supra.mylog(error)
 
         for lame2 in self.lame2:
             if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -267,7 +287,6 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     # Sortie log
                     BotModeration.supra.mylog(error)
 
-                
 
         for lame3 in self.lame3:
             if lame3 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -280,7 +299,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     error = str(e)
                     # Sortie log
                     BotModeration.supra.mylog(error)
-                 
+
         for lame4 in self.lame4:
             if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
@@ -292,7 +311,6 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     error = str(e)
                     # Sortie log
                     BotModeration.supra.mylog(error)
-                  
 
         for lame5 in self.lame5:
             if lame5 in message and irclib.mask_matches(masque_auteur,masque_perso):
@@ -306,7 +324,6 @@ class BotModeration(ircbot.SingleServerIRCBot):
                      error = str(e)
                      # Sortie log
                      BotModeration.supra.mylog(error)
-
 
 
 
@@ -327,6 +344,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
                      # Sortie log
                      BotModeration.supra.mylog(error)
 
+        for ultimatum in self.ultimatum:
+            if ultimatum in message:
+                pass
 
 
 
