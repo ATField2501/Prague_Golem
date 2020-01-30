@@ -34,6 +34,10 @@ d_stop () {
         log_daemon_msg "Stopping system $daemon_NAME Daemon"
         start-stop-daemon --name $daemon_NAME --stop --retry 5 --quiet --name $daemon_NAME
     log_end_msg $?
+        killall -q $daemon_NAME || true
+        sleep 2
+        killall -q -9 $daemon_NAME || true
+
 }
  
 case "$1" in

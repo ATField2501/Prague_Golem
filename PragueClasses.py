@@ -133,6 +133,8 @@ def Repare(ss):
     ss = ss.replace('"' , '')          
     return ss
 
+
+
 def Dico(addr):
     """
     Cherche la definition d'un mot donné à l'aide de l'api wikipédia
@@ -157,17 +159,18 @@ def Dico(addr):
         fichierTMP.close()   
     return definition
 
+
+
 class Ecriture():
     def __init__ (self):
         """ Prends en charge l'ecriture des messages """
-
     def ecriture(self,*arg):
         """ Ecriture de ce que le bot vois dans le fichier Ecran_Kontrol"""
         with open("/home/cagliostro/Bureau/Ecran_Kontrol" , "a") as ecran_k:
             ecran_k.write(date+'-'+arg[0])
 
     def mylog(self,error):
-        """ Ecriture des erreurs dans le fichier log"""
+        """ Ecriture des erreurs dans le fichier log """
         with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
             log.write(date+'-'+error+"\n")
 

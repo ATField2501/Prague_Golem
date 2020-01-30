@@ -10,8 +10,8 @@ import time
 from Constantes_secretes import *
 from PragueConstantes import *
 from PragueClasses import *
-from BotFonctionslib import *
-from Prague_bdd_sql import * 
+#from BotFonctionslib import *
+#from Prague_bdd_sql import * 
 
 
 
@@ -24,7 +24,7 @@ print"    version  1.0   "
 class BotModeration(ircbot.SingleServerIRCBot):
     supra = Ecriture()
     # Initialisation de la base de données
-    bdd = Prague_Connexion()
+#    bdd = Prague_Connexion()
 
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
@@ -51,30 +51,31 @@ class BotModeration(ircbot.SingleServerIRCBot):
         
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         serv.join(chan1)
-        serv.join("#lymbes" , 'dead')  
-        serv.join(chan2)
+        serv.join(lymbes , mdp_lymbes)  
+#        serv.join(chan2)
 
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
-
-        try:  ## Si kk tente de pénétrer sur le chan # lymbes, on le refoule
-           if ev.target() == "#lymbes" and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
-              serv.kick("#lymbes", masque_auteur, 'Les Lymbes vous sont interdites, réjouissez-vous.')
-              serv.privmsg("#lymbes" , ":::    ..... - (;,,;) - .....    :::") 
-              serv.privmsg("#lymbes" , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+        ####### Administre le canal #lymbes en refoulant tout intrus
+        try:  
+           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
+              serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
+              serv.privmsg( lymbes , phrase_lymbes_2) 
+              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
         except:
-              serv.privmsg("#lymbes" , "je n'ai pas les niveaux de privilège requis pour effectuer le kick..") 
+              serv.privmsg(lymbes , phrase_lymbes_3) 
 
         ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
-        fichier1 = open("/tmp/name_visiteur.txt", "w" )
+        fichier1 = open( name , "w" )
         try:
             if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
                 lacible = ev.source() + "vient de rentrait dans le temple" 
                 oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
                 fichier1.write(oulalala)
                 fichier1.close() 
-                rar44 = open("/tmp/name_visiteur.txt", "r")
+                rar44 = open( name, "r")
                 visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
+                serv.privmsg("#Cthulhu" , visiteur)
                 serv.privmsg("#lymbes" , lacible)
                 # Ecriture dans le fichier Ecran_Kontrol
                 BotModeration.supra.ecriture(visiteur)
@@ -137,7 +138,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         # Ecriture dans le fichier Ecran_Kontrol
         BotModeration.supra.ecriture(kontrole)   
         # Ecriture dans la bdd sql
-        BotModeration.bdd.Ecriture_messages(message,auteur,canal)
+     #   BotModeration.bdd.Ecriture_messages(message,auteur,canal)
 
         # Commande reçus par le bot sur irc               
         for goto in self.goto:
