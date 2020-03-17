@@ -26,6 +26,9 @@ class BotModeration(ircbot.SingleServerIRCBot):
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
 
+    print("   Connexion  ")
+    print("serveur  :: {}\nport      :: {}\n").format(server_irc_adresse , port)
+
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
