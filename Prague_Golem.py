@@ -26,12 +26,16 @@ class BotModeration(ircbot.SingleServerIRCBot):
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
 
-    print("   Connexion  ")
-    print("serveur  :: {}\nport      :: {}\n").format(server_irc_adresse , port)
-
     def __init__(self): 
-        ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
+        try:
+            ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
+            print("\n   Connexion \n ")
+            print("serveur  :: {}\nport      :: {}\n").format(server_irc_adresse , port)
+
+        except Exception as e:
+            print("\n Connexion Impossible :: {}").format(str(e))
+        
         ## Variables propre à l'objet
         self.goto = ["!goto"]
         self.die = ["!die"]
@@ -53,7 +57,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
 
         
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
-        serv.join(chan1)
+#        serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
 
@@ -336,7 +340,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 try:
                     cible = ev.arguments()[0][8:]
                     serv.privmsg(canal,"cible : "+str(cible))
-                    os.system('python3 /home/cagliostro/Documents/Caglio-TaoTeKing/CaglioOracle.py -o > /tmp/tmp_Oracle.txt')
+                    os.system("python3 "+Tao+" > /tmp/tmp_Oracle.txt")
                     with open("/tmp/tmp_Oracle.txt","r") as wheed:
                         for line in wheed:
                             serv.privmsg(cible, line)

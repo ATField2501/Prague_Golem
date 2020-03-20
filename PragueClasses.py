@@ -60,7 +60,7 @@ def Son():
     """
     Fait tomber une url au hasard prise dans le fichier ListAddSon.txt
     """
-    fichierSon =  open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt", "r") 
+    fichierSon =  open(Son , "r") 
     NumberOfLine=compta()                
     from random import randrange
     risop = random.randint(0,NumberOfLine)
@@ -74,7 +74,7 @@ def Addson(slurP):
     """
     ya=False
     presente = False
-    boZon = open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt","r")
+    boZon = open(Son , "r")
     f=boZon.readlines()
     
     for e in f:
