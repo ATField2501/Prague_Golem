@@ -25,14 +25,13 @@ class BotModeration(ircbot.SingleServerIRCBot):
     supra = Ecriture()
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
-
+    time.sleep(1)
     def __init__(self): 
         try:
             ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
                                            botname, botname)  
             print("\n   Connexion \n ")
-            print("serveur  :: {}\nport      :: {}\n").format(server_irc_adresse , port)
-
+            print("serveur  :: {}\nport     :: {}\n").format(server_irc_adresse , port)
         except Exception as e:
             print("\n Connexion Impossible :: {}").format(str(e))
         
@@ -176,7 +175,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if bene in message:
                try:
                    serv.privmsg( canal ,"::: je ne suis qu'un bot :::")
-                   with open("/home/cagliostro/Documents/Prague_Golem/fichier_help.txt") as helpyou:
+                   with open(Maison+"fichier_help.txt") as helpyou:
                        for line in helpyou:                                        
                            serv.privmsg( auteur , line)
                except Exception as e:
@@ -275,7 +274,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii01.txt") as ll:
+                    with open(Maison+"ascii_attack/ascii01.txt") as ll:
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:
@@ -287,7 +286,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii02.txt") as ll:
+                    with open(Maison+"ascii_attack/ascii02.txt") as ll:
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:
@@ -300,7 +299,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if lame3 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii03.txt") as ll:
+                    with open(Maison+"ascii_attack/ascii03.txt") as ll:
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:
@@ -312,7 +311,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii04.txt") as ll:
+                    with open(Maison+"ascii_attack/ascii04.txt") as ll:
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:
@@ -324,7 +323,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if lame5 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open("/home/cagliostro/Documents/Prague_Golem/ascii_attack/ascii05.txt") as ll:
+                    with open(Maison+"ascii_attack/ascii05.txt") as ll:
                         for line in ll:
                             serv.privmsg(cible, line)
                 except Exception as e:

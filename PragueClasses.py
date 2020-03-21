@@ -7,6 +7,7 @@ import urllib2
 import json
 import random
 import smtplib
+from PragueConstantes import *
 
 date=time.strftime("%A %d %B %Y %H:%M:%S")
 
@@ -14,7 +15,7 @@ def compta():
     """
     Compte les lignes du fichier ListeAddSon.txt
     """      
-    f = open('/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt', 'r')        
+    f = open(Maison+'/ListeAddSon.txt', 'r')        
     NumberOfLine = 0
     for line in f:
         NumberOfLine += 1          
@@ -81,7 +82,7 @@ def Addson(slurP):
         if e.rstrip() == slurP.rstrip():
             presente = True
     boZon.close()        
-    fichierSon =  open("/home/cagliostro/Documents/Prague_Golem/ListeAddSon.txt", "a")                 
+    fichierSon =  open(Maison+"ListeAddSon.txt", "a")                 
     try:
         if presente == False:
             if len(slurP) <= 200:
@@ -102,7 +103,7 @@ def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     msg = ":::  Maître.. Je reçois un méssage  :::"
     server = smtplib.SMTP('smtp.gmail.com' , 587)
     message455 = stars + "    >>> " + pigeon + "\n" # On recupére le message
-    sting = open("/home/cagliostro/Bureau/Boite_Reception.txt", "a")
+    sting = open(Maison+"Boite_Reception.txt", "a")
     sting.write(message455)
     sting.close()
     Data = msg + message455
@@ -166,12 +167,12 @@ class Ecriture():
         """ Prends en charge l'ecriture des messages """
     def ecriture(self,*arg):
         """ Ecriture de ce que le bot vois dans le fichier Ecran_Kontrol"""
-        with open("/home/cagliostro/Bureau/Ecran_Kontrol" , "a") as ecran_k:
+        with open(Maison+"Ecran_Kontrol" , "a") as ecran_k:
             ecran_k.write(date+'-'+arg[0])
 
     def mylog(self,error):
         """ Ecriture des erreurs dans le fichier log """
-        with open("/home/cagliostro/Bureau/PragueGolem_log" , "a") as log:
+        with open(Maison+"PragueGolem_log" , "a") as log:
             log.write(date+'-'+error+"\n")
 
     def recenssement(self,*arg):
@@ -179,7 +180,7 @@ class Ecriture():
         self.presente = False
         print(arg[0])
         try:
-            with open("/home/cagliostro/Bureau/PragueGolem_recenssement" , "r") as ecran_re:
+            with open(Maison+"PragueGolem_recenssement" , "r") as ecran_re:
                 f=ecran_re.readlines() 
                 for e in f:
                     if e.strip() == arg[0]:
@@ -189,6 +190,6 @@ class Ecriture():
             pass
 
         if self.presente == False:
-            with open("/home/cagliostro/Bureau/PragueGolem_recenssement","a") as ecran_:
+            with open(Maison+"PragueGolem_recenssement","a") as ecran_:
                 ecran_.write(arg[0]+"\n ")
                 
