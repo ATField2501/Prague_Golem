@@ -1,11 +1,18 @@
 """ Identifiants Secrets """
 
-
+## Identifiants Serveur
 botname="Prague_Golem"
 server_irc_adresse="irc.epiknet.org"
 port=6667
-mdp_irc='test'
+mdp_irc="huhu (;,,;)"
 nickperso="Cagliostro"
 
+## Identifiants messagerie
 adresse_mail="atfield2501@gmail.com"
 mdp_mail="xxxx"
+
+## Identifiants base 
+localisation="localhost"
+utilisateur="PragueGolem"
+mdp="mdp=^^"
+baseDonnees="PragueGolem"
