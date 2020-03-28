@@ -11,7 +11,7 @@ nickperso="Cagliostro"
 adresse_mail="atfield2501@gmail.com"
 mdp_mail="xxxx"
 
-## Identifiants base 
+## Identifiants base de données 
 localisation="localhost"
 utilisateur="PragueGolem"
 mdp="mdp=^^"
