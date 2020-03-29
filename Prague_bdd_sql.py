@@ -3,9 +3,11 @@
 # auteur: cagliostro <atfield2501@gmail.com>
 
 """ Module du bot Prague_Golem servant à la connection avec la base de données sql PragueGolem """
-
-import mysql.connector
-from Praguesqlsecret import *
+try:
+   import mysql.connector
+except:
+    print("librairie msq.connector manquante")
+from Constantes_secretes import *
 
 class Prague_Connexion():
     """ Connexion à la base de données sql PragueGolem """
@@ -17,7 +19,7 @@ class Prague_Connexion():
         print("Connexion à la base de données  {}   OK \n").format(baseDonnees)
 
     except Exception as e:
-        print("connexion impossible . . . Cause: "+str(e))
+        print("connexion à la base de donnée impossible . . .\nCause :: "+str(e))
 
     def Ecriture_messages(self,*args):
         """ Ecriture dans la table flux des messages posté sur les chan ou le bot est présent """

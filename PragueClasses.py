@@ -11,11 +11,18 @@ from PragueConstantes import *
 
 date=time.strftime("%A %d %B %Y %H:%M:%S")
 
+def Lecture():
+    """ Fonction prenant en charge la lecture des fichiers """
+    with open("ascii_attack/ascii04.txt", "r") as ecran:
+        sortie = ecran.readlines()
+    return sortie
+
+
 def compta():  
     """
     Compte les lignes du fichier ListeAddSon.txt
     """      
-    f = open(Maison+'/ListeAddSon.txt', 'r')        
+    f = open(Maison+'ListeAddSon.txt', 'r')        
     NumberOfLine = 0
     for line in f:
         NumberOfLine += 1          
@@ -25,14 +32,14 @@ def Iss():
     """
     Appel de l'api pour position orbitale de la station spatial ISS
     """
-    fichierTMP1 =open("/tmp/tmp_iss", "w") 
+    fichierTMP1 =open(Maison+"tmp_iss", "w") 
     req = urllib2.Request( "http://api.open-notify.org/iss-now.json" )
     response = urllib2.urlopen(req)
     obj = json.loads(response.read())                    
     armadda = "Position Actuelle de la station orbitale ISS:  timestamp >>",obj[ "timestamp" ] ,"latidude >>" ,obj[ "iss_position" ][ "latitude" ],"longitude >>",obj[ "iss_position" ][ "longitude" ]                   
     fichierTMP1.write(json.dumps(armadda))
     fichierTMP1.close()
-    fichierTMP1 =open("/tmp/tmp_iss", "r")
+    fichierTMP1 =open(Maison+"tmp_iss", "r")
     position_orbitale=fichierTMP1.readlines()[0]
     return position_orbitale
 
@@ -42,10 +49,10 @@ def Traduction(cible959):
     """
     response555 = urllib2.urlopen(cible959)
     obj889 = response555.read()
-    fichier02 =open("/tmp/tmp_recherche.txt", "w")
+    fichier02 =open(Maison+"tmp_recherche.txt", "w")
     fichier02.write(obj889)
     fichier02.close()
-    with open("/tmp/tmp_recherche.txt", "r") as f:
+    with open(Maison+"tmp_recherche.txt", "r") as f:
         for line in f.readlines():
             if '<title>' in line:
                 iioonnn = line.split('<title>')
@@ -61,7 +68,7 @@ def Son():
     """
     Fait tomber une url au hasard prise dans le fichier ListAddSon.txt
     """
-    fichierSon =  open(Son , "r") 
+    fichierSon =  open(Maison+"ListeAddSon.txt" , "r") 
     NumberOfLine=compta()                
     from random import randrange
     risop = random.randint(0,NumberOfLine)
@@ -75,7 +82,7 @@ def Addson(slurP):
     """
     ya=False
     presente = False
-    boZon = open(Son , "r")
+    boZon = open(Maison+"ListeAddSon.txt" , "r")
     f=boZon.readlines()
     
     for e in f:
@@ -141,25 +148,24 @@ def Dico(addr):
     Cherche la definition d'un mot donné à l'aide de l'api wikipédia
     """
     ss=""
-    fichierTMP =open("/tmp/tmp_wikipedia", "w")  
+    
     wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
     soft = wikipedia+addr
     response = urllib2.urlopen(soft)     
     obj1 = json.loads(response.read())
-    obj2 = obj1[2] 
+    obj2 = obj1[2]
     obj3 = obj2[0]+obj2[2]
-    fichierTMP.write(json.dumps(obj3))                   
-    fichierTMP.close()   
-    fichierTMP =open("/tmp/tmp_wikipedia", "r")                    
-    definition = fichierTMP.readlines()
-    for line in definition:
-        ss += line
-        filtre = Repare(ss)
-        fichierTMP =open("/tmp/tmp_wikipedia", "w")  
-        fichierTMP.write(filtre) 
-        fichierTMP.close()   
-    return definition
-
+    with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTMP: 
+        fichierTTMP.write(json.dumps(obj3))                   
+        with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTTMP:      
+            definition = fichierTTTMP.readlines()
+        for line in definition:
+            ss += line
+#            filtre = Repare(ss)
+        with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTTTMP: 
+            fichierTTTTMP.write(ss)    
+   
+    return 
 
 
 class Ecriture():

@@ -11,30 +11,29 @@ from Constantes_secretes import *
 from PragueConstantes import *
 from PragueClasses import *
 #from BotFonctionslib import *
-#from Prague_bdd_sql import * 
 
 
+print("\n  ---------------- ")
+print("  - Prague_Golem - ")
+print("  ---------------- ")
+print("    version  1.0  \n ")
 
+try:
+    from Prague_bdd_sql import * 
+except:
+    pass
 
-print"  ---------------- "
-print"  - Prague_Golem - "
-print"  ---------------- "
-print"    version  1.0   "
 
 class BotModeration(ircbot.SingleServerIRCBot):
     supra = Ecriture()
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
-    time.sleep(1)
     def __init__(self): 
-        try:
-            ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] , 
-                                           botname, botname)  
-            print("\n   Connexion \n ")
-            print("serveur  :: {}\nport     :: {}\n").format(server_irc_adresse , port)
-        except Exception as e:
-            print("\n Connexion Impossible :: {}").format(str(e))
-        
+        ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] ,
+                botname, botname)  
+        print("\nserveur    :: {}\nport       :: {}").format(server_irc_adresse , port)
+    
+
         ## Variables propre à l'objet
         self.goto = ["!goto"]
         self.die = ["!die"]
@@ -56,10 +55,11 @@ class BotModeration(ircbot.SingleServerIRCBot):
 
         
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
+        print("Connection :: ok")
 #        serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
-
+       
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
 	masque_auteur = irclib.nm_to_n(ev.source())
         ####### Administre le canal #lymbes en refoulant tout intrus
@@ -217,7 +217,8 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     serv.privmsg( canal ,"Erreur..") 
                     error = str(e)
                     # Sortie log
-                    BotModeration.supra.mylog(error) 
+                    BotModeration.supra.mylog(error)
+                    print(error)
 
         for addson in self.addson: # Ajoute une url youtube au fichier
             if addson in message:
@@ -228,7 +229,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                     if ya == True:
                         serv.privmsg( canal , " * addson *") 
                         cible959=musique
-                        titre=Traduction(cible959)
+                        titre=Traduction(str(cible959))
                         serv.privmsg( canal , titre)     
                     else:
                         serv.privmsg( canal , " * Mauvaise entree *")    
@@ -256,19 +257,22 @@ class BotModeration(ircbot.SingleServerIRCBot):
             if dico in message:
                 try:	
                     addr = ev.arguments()[0][6:]
-                    definition = Dico(addr)
-                    fichierTMP =open("/tmp/tmp_wikipedia", "r")  
-                    for line in fichierTMP:     
-                        longueur=len(line)    # je cherche le moyen de faire des lignes courtes         
-                        serv.privmsg( canal , line[:longueur/2])  
-                        time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
-                        serv.privmsg( canal , line[longueur/2:])  
-                        time.sleep(0.3)
+                    serv.privmsg(canal , "Deffinition du mot: {}".format(str(addr)))
+                    Dico(addr)
+                    with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTMPi:
+                        for line in fichierTTMPi:     
+                            longueur=len(line)    # je cherche le moyen de faire des lignes courtes         
+                            serv.privmsg( canal , line[:longueur/2])  
+                            time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
+                            serv.privmsg( canal , line[longueur/2:])  
+                            time.sleep(0.3)
                 except Exception as e:
                     error = str(e)
+                    print("Erreur :: {}".format(error))
                     # Sortie log
                     BotModeration.supra.mylog(error)
                     serv.privmsg( canal ,"Erreur..")
+                serv.privmsg(canal , 'AAA YE, Fini!!')    
 
         for lame1 in self.lame1:
             if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
