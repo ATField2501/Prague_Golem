@@ -6,7 +6,6 @@ import os
 import irclib
 import ircbot
 import time
-
 from Constantes_secretes import *
 from PragueConstantes import *
 from PragueClasses import *
@@ -20,7 +19,14 @@ print("    version  1.0  \n ")
 
 from Prague_bdd_sql import * 
 
-
+## test de la presence de screen 
+os.system("screen -v")
+test=os.system("echo $?")
+if test == '0':
+    print('screen ok')
+    
+else:
+    print('screen non installé')
 
 class PragueGolem(ircbot.SingleServerIRCBot):
     supra = Ecriture()
@@ -58,7 +64,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         print(message)
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
-        print("Connection :: ok")
+        print("Connection :: ok \n\n")
         serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
@@ -68,25 +74,24 @@ class PragueGolem(ircbot.SingleServerIRCBot):
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
         masque_auteur = irclib.nm_to_n(ev.source())
         ####### Administre le canal #lymbes en refoulant tout intrus
-#        try:  
-#           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
-#              serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
-#              serv.privmsg( lymbes , phrase_lymbes_2) 
-#              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
-#        except:
-#              serv.privmsg(lymbes , phrase_lymbes_3) 
-#
-        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes			
-    
+        try:  
+           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
+              serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
+              serv.privmsg( lymbes , phrase_lymbes_2) 
+              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+        except:
+              serv.privmsg(lymbes , phrase_lymbes_3) 
+
+        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes		
         if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
             lacible = ev.source() + "vient de rentrait dans le temple" 
             oulalala= "Salut à toi " + irclib.nm_to_n(ev.source())
-            print(lacible+'   '+ oulalala)
             try:
                 with open(name , "w") as fichier1:
                     fichier1.write(oulalala)
                 with open(name , 'r') as fichier2:        
                     visiteur = ":::  " + fichier2.readlines()[0] + "  :::" + "\n"
+                time.sleep(1)    
                 serv.privmsg("#Cthulhu" , visiteur)
                 serv.privmsg("#lymbes" , lacible)
                 # Ecriture dans le fichier Ecran_Kontrol
@@ -101,9 +106,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 PragueGolem.supra.mylog(error)
                 print(str(e)+'  yo')
             
-    def get_version(self,serv,ev):
-        serv.privmsg(canal,"- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - atfield2501.free.fr")
-        PragueGolem.rapport(self , serv , ev)
+    def get_version(self):
+        return "- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - ^(;,,;)^"
+#        PragueGolem.rapport(self , serv , ev)
     
     def on_nick(self,serv,ev): 
         PragueGolem.rapport(self , serv , ev)
@@ -138,8 +143,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         PragueGolem.bdd.Ecriture_messages(message,auteur,canal)
 
 
-    def on_pubmsg(self, serv, ev): # Quant un message est posté
-        
+    def on_pubmsg(self, serv, ev):
+        """ Quant le chan reçoit un post """ 
         auteur = irclib.nm_to_n(ev.source())
         canal = ev.target()
         message = ev.arguments()[0].lower() 
@@ -147,6 +152,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
         # Ecriture de tous les posts dans un fichier  
         kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
+        print(kontrole)
         # Ecriture dans le fichier Ecran_Kontrol
         PragueGolem.supra.ecriture(kontrole)   
         # Ecriture dans la bdd sql
@@ -284,61 +290,70 @@ class PragueGolem(ircbot.SingleServerIRCBot):
             if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open(Maison+"ascii_attack/ascii01.txt") as ll:
-                        for line in ll:
-                            serv.privmsg(cible, line)
+                    retour = Lecture('1')
+                    for line in retour:
+                        serv.privmsg(canal , line)
                 except Exception as e:
-                    error = str(e)
-                    # Sortie log
-                    PragueGolem.supra.mylog(error)
+                     serv.privmsg(canal,"* Impossible *")
+                     error = str(e)
+                     print(error)
+                     # Sortie log
+                     PragueGolem.supra.mylog(error)
 
         for lame2 in self.lame2:
             if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open(Maison+"ascii_attack/ascii02.txt") as ll:
-                        for line in ll:
-                            serv.privmsg(cible, line)
+                    retour = Lecture('2')
+                    for line in retour:
+                        serv.privmsg(canal , line)
                 except Exception as e:
-                    error = str(e)
-                    # Sortie log
-                    PragueGolem.supra.mylog(error)
+                     serv.privmsg(canal,"* Impossible *")
+                     error = str(e)
+                     print(error)
+                     # Sortie log
+                     PragueGolem.supra.mylog(error)
 
 
         for lame3 in self.lame3:
             if lame3 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open(Maison+"ascii_attack/ascii03.txt") as ll:
-                        for line in ll:
-                            serv.privmsg(cible, line)
+                    retour = Lecture('3')
+                    for line in retour:
+                        serv.privmsg(canal , line)
                 except Exception as e:
-                    error = str(e)
-                    # Sortie log
-                    PragueGolem.supra.mylog(error)
+                     serv.privmsg(canal,"* Impossible *")
+                     error = str(e)
+                     print(error)
+                     # Sortie log
+                     PragueGolem.supra.mylog(error)
 
         for lame4 in self.lame4:
             if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open(Maison+"ascii_attack/ascii04.txt") as ll:
-                        for line in ll:
-                            serv.privmsg(cible, line)
+                    retour = Lecture('4')
+                    for line in retour:
+                        serv.privmsg(canal , line)
                 except Exception as e:
-                    error = str(e)
-                    # Sortie log
-                    PragueGolem.supra.mylog(error)
+                     serv.privmsg(canal,"* Impossible *")
+                     error = str(e)
+                     print(error)
+                     # Sortie log
+                     PragueGolem.supra.mylog(error)
 
         for lame5 in self.lame5:
             if lame5 in message and irclib.mask_matches(masque_auteur,masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
-                    with open(Maison+"ascii_attack/ascii05.txt") as ll:
-                        for line in ll:
-                            serv.privmsg(cible, line)
+                    retour = Lecture('5')
+                    for line in retour:
+                        serv.privmsg(canal , line)
                 except Exception as e:
                      serv.privmsg(canal,"* Impossible *")
                      error = str(e)
+                     print(error)
                      # Sortie log
                      PragueGolem.supra.mylog(error)
 

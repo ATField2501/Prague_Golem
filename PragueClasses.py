@@ -1,19 +1,19 @@
 # -*- coding: utf8 
-
+# auteur cagliostro <atfield2501@gmail.com>
 """ Classes et Fonctions du bot Prague_Golem """
 
 import time
 import urllib2
 import json
-import random
 import smtplib
+import random
 from PragueConstantes import *
 
 date=time.strftime("%A %d %B %Y %H:%M:%S")
 
-def Lecture():
+def Lecture(*args):
     """ Fonction prenant en charge la lecture des fichiers """
-    with open("ascii_attack/ascii04.txt", "r") as ecran:
+    with open("ascii_attack/ascii0"+str(args[0])+".txt", "r") as ecran:
         sortie = ecran.readlines()
     return sortie
 
@@ -70,7 +70,6 @@ def Son():
     """
     fichierSon =  open(Maison+"ListeAddSon.txt" , "r") 
     NumberOfLine=compta()                
-    from random import randrange
     risop = random.randint(0,NumberOfLine)
     musique = fichierSon.readlines()[risop]
     fichierSon.close()
@@ -155,16 +154,17 @@ def Dico(addr):
     obj1 = json.loads(response.read())
     obj2 = obj1[2]
     obj3 = obj2[0]+obj2[2]
+    print("demande de la déffinition de {]".format(obj2))
     with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTMP: 
         fichierTTMP.write(json.dumps(obj3))                   
-        with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTTMP:      
-            definition = fichierTTTMP.readlines()
-        for line in definition:
-            ss += line
+    with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTTMP:      
+        definition = fichierTTTMP.readlines()
+    for line in definition:
+        ss += line
 #            filtre = Repare(ss)
-        with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTTTMP: 
-            fichierTTTTMP.write(ss)    
-   
+    with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTTTMP: 
+        fichierTTTTMP.write(ss)    
+
     return 
 
 
