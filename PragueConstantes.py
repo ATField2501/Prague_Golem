@@ -5,7 +5,7 @@ import os
 
 # Variables sensibles
 masque_perso="*~Cagliostr@*"
-chan1="#Cthulhu"
+chan1="#cthulhu"
 lymbes="#lymbes"
 mdp_lymbes="dead"
 ## Chemins vers fichiers divers

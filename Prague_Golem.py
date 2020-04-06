@@ -55,41 +55,38 @@ class PragueGolem(ircbot.SingleServerIRCBot):
     # Messages du serveur
     def rapport(self , serv , ev):
         message = str(ev.arguments())
-        print(message)        
-        message = str(PragueGolem._connected_checker(self))
         print(message)
 
     def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
         print("Connection :: ok")
-        PragueGolem.rapport(self , serv , ev)
         serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
         # Seconde identification, la premiere échoue sur epiknet
         serv.privmsg('Themis' , 'IDENTIFY '+ mdp_irc)
+    
     def on_join(self, serv, ev): #Quant kk rejoint le canal               
-        PragueGolem.rapport(self , serv , ev)
-        
         masque_auteur = irclib.nm_to_n(ev.source())
         ####### Administre le canal #lymbes en refoulant tout intrus
-        try:  
-           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
-              serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
-              serv.privmsg( lymbes , phrase_lymbes_2) 
-              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
-        except:
-              serv.privmsg(lymbes , phrase_lymbes_3) 
-
-        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes													
-        fichier1 = open( name , "w" )
-        try:
-            if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
-                lacible = ev.source() + "vient de rentrait dans le temple" 
-                oulalala= "Salut à toi " + irclib.nm_to_n(ev.source()) 
-                fichier1.write(oulalala)
-                fichier1.close() 
-                rar44 = open( name, "r")
-                visiteur = ":::  " + rar44.readlines()[0] + "  :::" + "\n"
+#        try:  
+#           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
+#              serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
+#              serv.privmsg( lymbes , phrase_lymbes_2) 
+#              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+#        except:
+#              serv.privmsg(lymbes , phrase_lymbes_3) 
+#
+        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes			
+    
+        if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
+            lacible = ev.source() + "vient de rentrait dans le temple" 
+            oulalala= "Salut à toi " + irclib.nm_to_n(ev.source())
+            print(lacible+'   '+ oulalala)
+            try:
+                with open(name , "w") as fichier1:
+                    fichier1.write(oulalala)
+                with open(name , 'r') as fichier2:        
+                    visiteur = ":::  " + fichier2.readlines()[0] + "  :::" + "\n"
                 serv.privmsg("#Cthulhu" , visiteur)
                 serv.privmsg("#lymbes" , lacible)
                 # Ecriture dans le fichier Ecran_Kontrol
@@ -97,17 +94,15 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 # Ecriture recenssement
                 PragueGolem.supra.recenssement(irclib.nm_to_n(ev.source())) 
                 # sortie console
-                print(visiteur)
                 # sortie irc
-                serv.privmsg("#Cthulhu",visiteur)
-        except Exception as e:
+            except Exception as e:
                 error = str(e)
                 # Sortie log
                 PragueGolem.supra.mylog(error)
-                print(str(e))
-
+                print(str(e)+'  yo')
+            
     def get_version(self,serv,ev):
-        serv.privmsg("","- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - atfield2501.free.fr")
+        serv.privmsg(canal,"- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - atfield2501.free.fr")
         PragueGolem.rapport(self , serv , ev)
     
     def on_nick(self,serv,ev): 
