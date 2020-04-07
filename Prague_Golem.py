@@ -122,18 +122,22 @@ class PragueGolem(ircbot.SingleServerIRCBot):
      
     def on_privmsg(self, serv, ev): 
         """ Quand le bot reçoit un message en privé """
-       try:   
-           auteur666 = irclib.nm_to_n(ev.source()) # On recupére l'auteur du message 
-           pigeon = ev.arguments()[0] # Ainsi que le méssage 
-           stars = ev.source() 
-           ## Appel de la fonction Message() 
-           msg = Message(auteur666 , pigeon , stars, adresse_mail , mdp_mail , botname)
-           serv.privmsg(auteur666, "::: Méssage Enregistré :::") # On réponds à la personne
-           serv.privmsg(nickperso , msg) # On informe le Maître
-       except Exception as e:
-           error = str(e)
-           # Sortie log
-           PragueGolem.supra.mylog(error)
+        try:  
+            # On recupére l'auteur du message 
+            auteur666 = irclib.nm_to_n(ev.source())
+            pigeon = ev.arguments()[0] # Ainsi que le méssage 
+            stars = ev.source() 
+            ## Appel de la fonction Message() 
+            msg = Message(auteur666 , pigeon , stars, 
+                    adresse_mail , mdp_mail , botname)
+            # On réponds à la personne
+            serv.privmsg(auteur666, phrase_3)
+            # On informe le Maître
+            serv.privmsg(nickperso , msg)
+        except Exception as e:
+            error = str(e)
+            # Sortie log
+            PragueGolem.supra.mylog(error)
 
 
     def on_action(self, serv, ev):
@@ -163,40 +167,55 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         # Commande reçus par le bot sur irc        
         ### Déplacement
         for goto in self.goto:
-            if goto in message and irclib.mask_matches(masque_auteur, masque_perso):               
+            if goto in message \ # line break python ;)
+                    and irclib.mask_matches(masque_auteur, 
+                            masque_perso):               
                 cible1 = ev.arguments()[0][6:]  
-                serv.privmsg( canal , " :::    Je m'y rends   :::")
+                serv.privmsg( canal , phrase_1)
                 serv.join(cible1)
-            elif goto in message and not irclib.mask_matches(masque_auteur, masque_perso):               
-                serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
+            elif goto in message \
+                    and not irclib.mask_matches(masque_auteur, 
+                            masque_perso):               
+                serv.privmsg( canal , phrase_2)
         ### Mourir
         for die in self.die:
-            if die in message and irclib.mask_matches(masque_auteur, masque_perso):                
-                serv.privmsg( canal , " ::: Je meurt...   :::")
+            if die in message \
+                    and irclib.mask_matches(masque_auteur, 
+                            masque_perso):                
+                serv.privmsg( canal ,phrase_4)
                 self.die()
-            elif die in message and not irclib.mask_matches(masque_auteur, masque_perso):               
-                serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
+            elif die in message \
+                    and not irclib.mask_matches(masque_auteur, 
+                            masque_perso):               
+                serv.privmsg( canal , phrase_2)
         ## Partir
         for conge in self.conge:
-            if conge in message and irclib.mask_matches(masque_auteur, masque_perso):
-                serv.privmsg( canal , " ::: je rentre au Temple  :::")
+            if conge in message \
+                    and irclib.mask_matches(masque_auteur, 
+                            masque_perso):
+                serv.privmsg( canal , phrase_5)
                 serv.part(canal, message='::::  (;,,;)  ::::')
-            elif conge in message and not irclib.mask_matches(masque_auteur, masque_perso):               
-                serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
-        ## Evocation du nom   
-        for bene in self.bene:    #Réagi à son nom pour indiquer qu'il n'est pas humain et donner la liste de ses commandes...
+            elif conge in message \
+                    and not irclib.mask_matches(masque_auteur, 
+                            masque_perso):               
+                serv.privmsg( canal , phrase_2)
+        ## Evocation du nom 
+        # Réagi à son nom pour indiquer qu'il n'est 
+        # pas humain et donner la liste de ses commandes...
+        for bene in self.bene:    
             if bene in message:
                try:
-                   serv.privmsg( canal ,"::: je ne suis qu'un bot :::")
-                   with open(Maison+"fichier_help.txt") as helpyou:
-                       for line in helpyou:                                        
+                   serv.privmsg( canal , phrase_6)
+                   with open(Maison+"fichier_help.txt") \
+                           as helpyou:
+                       for line in helpyou:                     
                            serv.privmsg( auteur , line)
                except Exception as e:
                    error = str(e)
                    # Sortie log
                    PragueGolem.supra.mylog(error) 
 
-        # traduction des url youtube et autres en titres de chansons...                  
+        # traduction des url youtube et autres en titres                 
         for http in self.http:                             
             if http in message:
                try:
@@ -278,7 +297,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                         for line in fichierTTMPi:     
                             longueur=len(line)    # je cherche le moyen de faire des lignes courtes         
                             serv.privmsg( canal , line[:longueur/2])  
-                            time.sleep(0.3) ## Une petite pause pour ne pas effrayer le serveur irc
+                            ## Une petite pause pour ne pas 
+                            # effrayer le serveur irc
+                            time.sleep(0.3) 
                             serv.privmsg( canal , line[longueur/2:])  
                             time.sleep(0.3)
                 except Exception as e:
@@ -290,7 +311,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 serv.privmsg(canal , 'AAA YE, Fini!!')    
 
         for lame1 in self.lame1:
-            if lame1 in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if lame1 in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     retour = Lecture('1')
@@ -304,7 +327,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                      PragueGolem.supra.mylog(error)
 
         for lame2 in self.lame2:
-            if lame2 in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if lame2 in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     retour = Lecture('2')
@@ -319,7 +344,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
 
         for lame3 in self.lame3:
-            if lame3 in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if lame3 in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     retour = Lecture('3')
@@ -333,7 +360,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                      PragueGolem.supra.mylog(error)
 
         for lame4 in self.lame4:
-            if lame4 in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if lame4 in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     retour = Lecture('4')
@@ -347,7 +376,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                      PragueGolem.supra.mylog(error)
 
         for lame5 in self.lame5:
-            if lame5 in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if lame5 in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     retour = Lecture('5')
@@ -363,7 +394,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
 
         for oracle in self.oracle:
-            if oracle in message and irclib.mask_matches(masque_auteur,masque_perso):
+            if oracle in message \
+                    and irclib.mask_matches(masque_auteur,
+                            masque_perso):
                 try:
                     cible = ev.arguments()[0][8:]
                     serv.privmsg(canal,"cible : "+str(cible))
