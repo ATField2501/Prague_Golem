@@ -36,7 +36,11 @@ def Iss():
     req = urllib2.Request( "http://api.open-notify.org/iss-now.json" )
     response = urllib2.urlopen(req)
     obj = json.loads(response.read())                    
-    armadda = "Position Actuelle de la station orbitale ISS:  timestamp >>",obj[ "timestamp" ] ,"latidude >>" ,obj[ "iss_position" ][ "latitude" ],"longitude >>",obj[ "iss_position" ][ "longitude" ]                   
+    armadda = "Position Actuelle de " + \
+            "la station orbitale ISS:  timestamp >>",\
+            obj[ "timestamp" ] ,"latidude >>" ,\
+            obj[ "iss_position" ][ "latitude" ],"longitude >>",\
+            obj[ "iss_position" ][ "longitude" ]                   
     fichierTMP1.write(json.dumps(armadda))
     fichierTMP1.close()
     fichierTMP1 =open(Maison+"tmp_iss", "r")
@@ -108,7 +112,8 @@ def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     """  
     msg = ":::  Maître.. Je reçois un méssage  :::"
     server = smtplib.SMTP('smtp.gmail.com' , 587)
-    message455 = stars + "    >>> " + pigeon + "\n" # On recupére le message
+    # On recupére le message
+    message455 = stars + "    >>> " + pigeon + "\n" 
     sting = open(Maison+"Boite_Reception.txt", "a")
     sting.write(message455)
     sting.close()
@@ -116,13 +121,16 @@ def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     server.starttls()
     server.login(adresse_mail , mdp_mail)
     data = botname + "\n" + message455
-    server.sendmail(adresse_mail , adresse_mail , data)  #Envoi du message par mail
+    # Envoi du message par mail
+    server.sendmail(adresse_mail , adresse_mail , data)  
     server.quit()
     return msg
 
 def Repare(ss):
     """
-    Appel la methode replace() pourquoi?? Parceque les librairie que j'utilise son en 2.7. Pour les noobs comme moi; vive python3
+    Appel la methode replace() pourquoi?? Parceque les 
+    librairie que j'utilise son en 2.7. 
+    Pour les noobs comme moi; vive python3
     """
     ss = ss.replace('\u00e9' , 'é')
     ss = ss.replace('\u00e7' , 'ç')
@@ -147,8 +155,7 @@ def Dico(addr):
     Cherche la definition d'un mot donné à l'aide de l'api wikipédia
     """
     ss=""
-    
-    wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
+     
     soft = wikipedia+addr
     response = urllib2.urlopen(soft)     
     obj1 = json.loads(response.read())

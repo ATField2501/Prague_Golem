@@ -33,9 +33,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
     def __init__(self): 
-        ircbot.SingleServerIRCBot.__init__(self, [(server_irc_adresse, port , mdp_irc)] ,
-                botname, botname)  
-        
+        ircbot.SingleServerIRCBot.__init__(self, 
+                [(server_irc_adresse, port , mdp_irc)] ,  botname, botname) 
+
         print("\nserveur    :: {}\nport       :: {}").format(server_irc_adresse , port)
 
         ## Variables propre à l'objet
@@ -78,7 +78,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
            if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
               serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
               serv.privmsg( lymbes , phrase_lymbes_2) 
-              serv.privmsg( lymbes , ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+              serv.privmsg( lymbes , \
+                      ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
         except:
               serv.privmsg(lymbes , phrase_lymbes_3) 
 
@@ -107,7 +108,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 print(str(e)+'  yo')
             
     def get_version(self):
-        return "- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - ^(;,,;)^"
+        return PG_Version 
 #        PragueGolem.rapport(self , serv , ev)
     
     def on_nick(self,serv,ev): 
@@ -220,7 +221,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         for http in self.http:                             
             if http in message:
                try:
-                   cible959 = ev.arguments()[0] or ev.arguments()[0][8:]                    
+                   cible959 = ev.arguments()[0] or ev.arguments()[0][8:] 
                    url=Traduction(cible959)
                    serv.privmsg( canal , url)   
                except:
@@ -269,7 +270,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     else:
                         serv.privmsg( canal , " * Mauvaise entree *")    
                     if presente == True:
-                        serv.privmsg(canal, " * url déjà présente dans la bdd *")
+                        serv.privmsg(canal, \
+                                " * url déjà présente dans la bdd *")
                 except Exception as e:
                     error = str(e)
                     print(error)
@@ -287,16 +289,19 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     # Sortie log
                     PragueGolem.supra.mylog(error)           
                     serv.privmsg( canal ,"Erreur..") 
-
-        for dico in self.dico: # Utilise API pour deffinition des mots par wikipédia
+        # Utilise API pour deffinition des mots par wikipédia
+        for dico in self.dico: 
             if dico in message:
                 try:	
                     addr = ev.arguments()[0][6:]
-                    serv.privmsg(canal , "Deffinition du mot: {}".format(str(addr)))
+                    serv.privmsg(canal , \
+                            "Deffinition du mot: {}".format(str(addr)))
                     Dico(addr)
-                    with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTMPi:
-                        for line in fichierTTMPi:     
-                            longueur=len(line)    # je cherche le moyen de faire des lignes courtes         
+                    with open(Maison + \
+                            "tmp_wikipedia.txt", "r") as fichierTTMPi:
+                        for line in fichierTTMPi:
+                        # je cherche le moyen de faire des lignes courtes 
+                            longueur=len(line)            
                             serv.privmsg( canal , line[:longueur/2])  
                             ## Une petite pause pour ne pas 
                             # effrayer le serveur irc
