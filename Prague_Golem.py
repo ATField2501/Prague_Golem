@@ -167,7 +167,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         # Commande reçus par le bot sur irc        
         ### Déplacement
         for goto in self.goto:
-            if goto in message \ # line break python ;)
+            # le line breack python c comme fonzi
+            if goto in message \
                     and irclib.mask_matches(masque_auteur, 
                             masque_perso):               
                 cible1 = ev.arguments()[0][6:]  
