@@ -111,14 +111,17 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 #        PragueGolem.rapport(self , serv , ev)
     
     def on_nick(self,serv,ev): 
+        """ Quant un utilisateur change de nickname """
         PragueGolem.rapport(self , serv , ev)
         # Ecriture recenssement
         PragueGolem.supra.recenssement(irclib.nm_to_n(ev.source())) 
 
-    def on_kick(self, serv, ev): # Rejoindre automatiquement le salon apres un kick
+    def on_kick(self, serv, ev): 
+        """  Rejoindre automatiquement le salon apres un kick """
         serv.join(ev.target())  
      
-    def on_privmsg(self, serv, ev): # Quand le bot recoit un message en privé 
+    def on_privmsg(self, serv, ev): 
+        """ Quand le bot reçoit un message en privé """
        try:   
            auteur666 = irclib.nm_to_n(ev.source()) # On recupére l'auteur du message 
            pigeon = ev.arguments()[0] # Ainsi que le méssage 
@@ -144,12 +147,11 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
 
     def on_pubmsg(self, serv, ev):
-        """ Quant le chan reçoit un post """ 
+        """ Quant un message est publié sur le canal """ 
         auteur = irclib.nm_to_n(ev.source())
         canal = ev.target()
         message = ev.arguments()[0].lower() 
         masque_auteur = ev.source()
-
         # Ecriture de tous les posts dans un fichier  
         kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
         print(kontrole)
@@ -158,7 +160,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         # Ecriture dans la bdd sql
      #   BotModeration.bdd.Ecriture_messages(message,auteur,canal)
 
-        # Commande reçus par le bot sur irc               
+        # Commande reçus par le bot sur irc        
+        ### Déplacement
         for goto in self.goto:
             if goto in message and irclib.mask_matches(masque_auteur, masque_perso):               
                 cible1 = ev.arguments()[0][6:]  
@@ -166,23 +169,21 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 serv.join(cible1)
             elif goto in message and not irclib.mask_matches(masque_auteur, masque_perso):               
                 serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
-
+        ### Mourir
         for die in self.die:
             if die in message and irclib.mask_matches(masque_auteur, masque_perso):                
                 serv.privmsg( canal , " ::: Je meurt...   :::")
                 self.die()
             elif die in message and not irclib.mask_matches(masque_auteur, masque_perso):               
                 serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
-
+        ## Partir
         for conge in self.conge:
             if conge in message and irclib.mask_matches(masque_auteur, masque_perso):
                 serv.privmsg( canal , " ::: je rentre au Temple  :::")
                 serv.part(canal, message='::::  (;,,;)  ::::')
             elif conge in message and not irclib.mask_matches(masque_auteur, masque_perso):               
                 serv.privmsg( canal , " :::    Je n'obéis qu'à mon Maître   :::")
-           
-           
-
+        ## Evocation du nom   
         for bene in self.bene:    #Réagi à son nom pour indiquer qu'il n'est pas humain et donner la liste de ses commandes...
             if bene in message:
                try:
@@ -195,17 +196,19 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                    # Sortie log
                    PragueGolem.supra.mylog(error) 
 
-                   
-        for http in self.http:     #traduis les url youtube et autres en titres de chansons...                          
+        # traduction des url youtube et autres en titres de chansons...                  
+        for http in self.http:                             
             if http in message:
                try:
                    cible959 = ev.arguments()[0] or ev.arguments()[0][8:]                    
                    url=Traduction(cible959)
                    serv.privmsg( canal , url)   
-               except: 
-                   pass ## Ne fais rien et évite de levé une erreur avec la fonction Addson           
+               except:
+                   # Ne fais rien et évite de levé une erreur avec la fonction Addson
+                   pass
 
-        for iss in self.iss: # utilise API pour donner position de la station spatial ISS
+        # utilise API pour donner position de la station spatial ISS
+        for iss in self.iss: 
             if iss in message:
                try:
                     position_orbitale=Iss()
