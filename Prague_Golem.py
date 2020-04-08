@@ -60,30 +60,44 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
     # Messages du serveur
     def rapport(self , serv , ev):
-        message = str(ev.arguments())
-        print(message)
+        """ Capture les flux avec le serveur """
+        print(str(ev.eventtype()))
+        print(str(ev.source()))  
+        print(str(ev.target()))
+        print(str(ev.arguments()))
+        
 
-    def on_welcome(self, serv, ev):  #Quant le bot à rejoint le serveur.
+    def on_welcome(self, serv, ev):
+        """ Quant le bot à rejoint le serveur """
         print("Connection :: ok \n\n")
         serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
         # Seconde identification, la premiere échoue sur epiknet
         serv.privmsg('Themis' , 'IDENTIFY '+ mdp_irc)
-    
-    def on_join(self, serv, ev): #Quant kk rejoint le canal               
+        # Demande de la liste des canneaux disponnible
+        serv.privmsg(self,'/list')
+        PragueGolem.rapport(self , serv , ev)
+
+
+    def on_join(self, serv, ev):
+        """ Quant un utilisateur rejoint le canal """
+        PragueGolem.rapport(self , serv , ev)
         masque_auteur = irclib.nm_to_n(ev.source())
-        ####### Administre le canal #lymbes en refoulant tout intrus
+        ## Administre le canal #lymbes en refoulant tout intrus
         try:  
-           if ev.target() == lymbes and masque_auteur != botname and irclib.nm_to_n(ev.source()) != nickperso:
+           if ev.target() == lymbes and masque_auteur != botname \
+                   and irclib.nm_to_n(ev.source()) != nickperso:
               serv.kick( lymbes , masque_auteur, phrase_lymbes_1)
               serv.privmsg( lymbes , phrase_lymbes_2) 
               serv.privmsg( lymbes , \
-                      ":::    {} tente de pénétrer dans les lymbes   :::".format(masque_auteur)) 
+                      ":::    {} tente de pénétrer dans les lymbes   :::"\
+                      .format(masque_auteur)) 
         except:
               serv.privmsg(lymbes , phrase_lymbes_3) 
 
-        ######## Salut le visiteur sur le chan1 et fait un rapport sur le chan #lymbes		
+        ### Salut le visiteur sur le chan1 
+        #    et fait un rapport sur le chan #lymbes		
         if ev.target() == chan1 and irclib.nm_to_n(ev.source()) != botname:
             lacible = ev.source() + "vient de rentrait dans le temple" 
             oulalala= "Salut à toi " + irclib.nm_to_n(ev.source())
@@ -108,6 +122,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 print(str(e)+'  yo')
             
     def get_version(self):
+        """ Retourne la version du bot """
         return PG_Version 
 #        PragueGolem.rapport(self , serv , ev)
     
@@ -158,7 +173,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         message = ev.arguments()[0].lower() 
         masque_auteur = ev.source()
         # Ecriture de tous les posts dans un fichier  
-        kontrole = ev.target() + "/" + auteur + " >>> " + ev.arguments()[0] + "\n"
+        kontrole = ev.target() + "/" + auteur + " >>> " \
+                + ev.arguments()[0] + "\n"
         print(kontrole)
         # Ecriture dans le fichier Ecran_Kontrol
         PragueGolem.supra.ecriture(kontrole)   
@@ -225,7 +241,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                    url=Traduction(cible959)
                    serv.privmsg( canal , url)   
                except:
-                   # Ne fais rien et évite de levé une erreur avec la fonction Addson
+                   # Ne fais rien et évite de levé une 
+                   # erreur avec la fonction Addson
                    pass
 
         # utilise API pour donner position de la station spatial ISS
@@ -235,12 +252,12 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     position_orbitale=Iss()
                     serv.privmsg( canal , position_orbitale) 
                except Exception as e:
-                    serv.privmsg( canal ,"Erreur..")               
+                    serv.privmsg( canal ,"Erreur..")
                     error = str(e)
                     # Sortie log
                     PragueGolem.supra.mylog(error) 
-
-        for son in self.son: # Fait tomber une url youtube au hasard
+        # Fait tomber une url youtube au hasard
+        for son in self.son: 
             if son in message:
                 try:
                     serv.privmsg( canal , " * son *")
@@ -255,8 +272,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     # Sortie log
                     PragueGolem.supra.mylog(error)
                     print(error)
-
-        for addson in self.addson: # Ajoute une url youtube au fichier
+        # Ajoute une url youtube au fichier
+        for addson in self.addson:
             if addson in message:
                 try:
                     slurP = ev.arguments()[0][8:]+ "\n"
@@ -414,7 +431,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 except Exception as e:
                      serv.privmsg(canal,"* Impossible *")
                      error = str(e)
-                     print(e)
+                     print(error)
                      # Sortie log
                      PragueGolem.supra.mylog(error)
 
