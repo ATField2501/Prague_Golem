@@ -20,8 +20,8 @@ print("    version  1.0  \n ")
 from Prague_bdd_sql import * 
 
 ## test de la presence de screen 
-os.system("screen -v")
-test=os.system("echo $?")
+test=os.system("screen -v")
+#test=os.system("echo $?")
 if test == '0':
     print('screen ok')
     
@@ -32,6 +32,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
     supra = Ecriture()
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
+    
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, 
                 [(server_irc_adresse, port , mdp_irc)] ,  botname, botname) 
@@ -57,16 +58,35 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         self.oracle = ["!oracle"]
         self.ultimatum = ["!ultimatum"]
 
+        self.obscure=time.strftime('%S')
 
-    # Messages du serveur
+#        PragueGolem.invite_comm(self)
+
+    def invite_comm(self):
+        """ Invite de commande dans le shell """
+        shell_entree=raw_input('>> ')
+        if shell_entree == 'help':
+            with open('PG_data/fichier_help.txt','r') as k:
+                for line in k:
+                    print(line)
+        elif shell_entree == 'vox':
+            serv.privmsg('lymbes', 'vox')
+
+
     def rapport(self , serv , ev):
         """ Capture les flux avec le serveur """
-        print(str(ev.eventtype()))
-        print(str(ev.source()))  
-        print(str(ev.target()))
-        print(str(ev.arguments()))
+        PragueGolem.supra.mylog(str(ev.eventtype()))
+        PragueGolem.supra.mylog(str(ev.source()))  
+        PragueGolem.supra.mylog(str(ev.target()))
+        PragueGolem.supra.mylog(str(ev.arguments()))
         
 
+    def action_repete(self, serv):
+        """ Repète une action sur le canal #cthulhu """
+         ### Fait tomber une url youtube au hasard toutes les minutes
+        serv.execute_at(time.time()+60,serv.privmsg, arguments=("#cthulhu","test cycles"))
+    
+    
     def on_welcome(self, serv, ev):
         """ Quant le bot à rejoint le serveur """
         print("Connection :: ok \n\n")
@@ -75,10 +95,12 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 #        serv.join(chan2)
         # Seconde identification, la premiere échoue sur epiknet
         serv.privmsg('Themis' , 'IDENTIFY '+ mdp_irc)
-        # Demande de la liste des canneaux disponnible
-        serv.privmsg(self,'/list')
+        # Demande de la liste des cannaux disponnible
+#        serv.privmsg(self,'/list')
         PragueGolem.rapport(self , serv , ev)
-
+     
+        PragueGolem.action_repete(self,serv)   
+   
 
     def on_join(self, serv, ev):
         """ Quant un utilisateur rejoint le canal """
@@ -113,16 +135,19 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 PragueGolem.supra.ecriture(visiteur)
                 # Ecriture recenssement
                 PragueGolem.supra.recenssement(irclib.nm_to_n(ev.source())) 
-                # sortie console
-                # sortie irc
             except Exception as e:
                 error = str(e)
                 # Sortie log
                 PragueGolem.supra.mylog(error)
                 print(str(e)+'  yo')
-            
+
+
+  
+    
+    
     def get_version(self):
         """ Retourne la version du bot """
+        PragueGolem.rapport(self , serv , ev)
         return PG_Version 
 #        PragueGolem.rapport(self , serv , ev)
     
@@ -134,10 +159,12 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
     def on_kick(self, serv, ev): 
         """  Rejoindre automatiquement le salon apres un kick """
+        PragueGolem.rapport(self , serv , ev)
         serv.join(ev.target())  
      
     def on_privmsg(self, serv, ev): 
         """ Quand le bot reçoit un message en privé """
+        PragueGolem.rapport(self , serv , ev)
         try:  
             # On recupére l'auteur du message 
             auteur666 = irclib.nm_to_n(ev.source())
@@ -158,6 +185,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
     def on_action(self, serv, ev):
         """ Quant un utilisteur fait une action """
+        PragueGolem.rapport(self , serv , ev)
         auteur = irclib.nm_to_n(ev.source())
         canal = ev.target()
         message = "[Action] "+ev.arguments()[0].lower() 
@@ -168,6 +196,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
     def on_pubmsg(self, serv, ev):
         """ Quant un message est publié sur le canal """ 
+        PragueGolem.rapport(self , serv , ev)
         auteur = irclib.nm_to_n(ev.source())
         canal = ev.target()
         message = ev.arguments()[0].lower() 
@@ -175,7 +204,6 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         # Ecriture de tous les posts dans un fichier  
         kontrole = ev.target() + "/" + auteur + " >>> " \
                 + ev.arguments()[0] + "\n"
-        print(kontrole)
         # Ecriture dans le fichier Ecran_Kontrol
         PragueGolem.supra.ecriture(kontrole)   
         # Ecriture dans la bdd sql
@@ -256,6 +284,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     error = str(e)
                     # Sortie log
                     PragueGolem.supra.mylog(error) 
+        
         # Fait tomber une url youtube au hasard
         for son in self.son: 
             if son in message:
@@ -305,7 +334,8 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                     error = str(e)
                     # Sortie log
                     PragueGolem.supra.mylog(error)           
-                    serv.privmsg( canal ,"Erreur..") 
+                    serv.privmsg( canal ,"Erreur..")
+
         # Utilise API pour deffinition des mots par wikipédia
         for dico in self.dico: 
             if dico in message:
@@ -315,7 +345,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                             "Deffinition du mot: {}".format(str(addr)))
                     Dico(addr)
                     with open(Maison + \
-                            "tmp_wikipedia.txt", "r") as fichierTTMPi:
+                            "PG_cache/tmp_wikipedia.txt", "r") as fichierTTMPi:
                         for line in fichierTTMPi:
                         # je cherche le moyen de faire des lignes courtes 
                             longueur=len(line)            
@@ -439,6 +469,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
             if ultimatum in message:
                 pass
 
+       
 
 
 if __name__ == "__main__":

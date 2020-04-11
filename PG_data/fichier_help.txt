@@ -1,0 +1,30 @@
+************************************
+            Prague_Golem 
+************************************ 
+*  !logo            /acces public  *
+*  !lame_* <cible>  /acces privé   *
+*  !bomb <cible>    /acces public  * 
+*  !yiking          /acces public  *
+*  !cite            /acces public  *
+*  !sort            /acces privé   *
+*  !deconect        /acces privé   *
+*  !goto <cible>    /acces privé   *
+*  !son             /acces public  *
+*  !addson          /acces public  *
+*  !tson            /acces public  *
+*  !repet <cible>   /acces public  *
+*  !die             /acces privé   *
+*  !addurl <cible>  /acces public  *
+*  !url             /acces public  *
+*  !time            /acces public  *
+*  !search_son      /acces public  *
+*  !note            /acces public  *
+*  !lirenote *      /acces public  *
+*  !totalnote       /acces public  *
+*  !t_note <cible>  /acces public  *
+*  !dico            /acces public  *
+*  !iss             /acces public  * 
+*  !visiteurs       /acces public  * 
+*  !screen          /acces privé   *
+************************************                                                                                           
+

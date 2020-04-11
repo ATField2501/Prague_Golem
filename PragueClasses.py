@@ -19,20 +19,16 @@ def Lecture(*args):
 
 
 def compta():  
-    """
-    Compte les lignes du fichier ListeAddSon.txt
-    """      
-    f = open(Maison+'ListeAddSon.txt', 'r')        
+    """ Compte les lignes du fichier ListeAddSon.txt """      
+    f = open(Maison+'PG_data/ListeAddSon.txt', 'r')        
     NumberOfLine = 0
     for line in f:
         NumberOfLine += 1          
     return NumberOfLine 
 
 def Iss():
-    """
-    Appel de l'api pour position orbitale de la station spatial ISS
-    """
-    fichierTMP1 =open(Maison+"tmp_iss", "w") 
+    """ Appel de l'api pour position orbitale de la station spatial ISS """
+    fichierTMP1 =open(Maison+"PG_cache/tmp_iss", "w") 
     req = urllib2.Request( "http://api.open-notify.org/iss-now.json" )
     response = urllib2.urlopen(req)
     obj = json.loads(response.read())                    
@@ -43,20 +39,18 @@ def Iss():
             obj[ "iss_position" ][ "longitude" ]                   
     fichierTMP1.write(json.dumps(armadda))
     fichierTMP1.close()
-    fichierTMP1 =open(Maison+"tmp_iss", "r")
+    fichierTMP1 =open(Maison+"PG_cache/tmp_iss", "r")
     position_orbitale=fichierTMP1.readlines()[0]
     return position_orbitale
 
 def Traduction(cible959):
-    """
-    Traduction des url youtube en titres
-    """
+    """ Traduction des url youtube en titres """
     response555 = urllib2.urlopen(cible959)
     obj889 = response555.read()
-    fichier02 =open(Maison+"tmp_recherche.txt", "w")
+    fichier02 =open(Maison+"PG_cache/tmp_recherche.txt", "w")
     fichier02.write(obj889)
     fichier02.close()
-    with open(Maison+"tmp_recherche.txt", "r") as f:
+    with open(Maison+"PG_cache/tmp_recherche.txt", "r") as f:
         for line in f.readlines():
             if '<title>' in line:
                 iioonnn = line.split('<title>')
@@ -72,7 +66,7 @@ def Son():
     """
     Fait tomber une url au hasard prise dans le fichier ListAddSon.txt
     """
-    fichierSon =  open(Maison+"ListeAddSon.txt" , "r") 
+    fichierSon =  open(Maison+"PG_data/ListeAddSon.txt" , "r") 
     NumberOfLine=compta()                
     risop = random.randint(0,NumberOfLine)
     musique = fichierSon.readlines()[risop]
@@ -85,14 +79,14 @@ def Addson(slurP):
     """
     ya=False
     presente = False
-    boZon = open(Maison+"ListeAddSon.txt" , "r")
+    boZon = open(Maison+"PG_data/ListeAddSon.txt" , "r")
     f=boZon.readlines()
     
     for e in f:
         if e.rstrip() == slurP.rstrip():
             presente = True
     boZon.close()        
-    fichierSon =  open(Maison+"ListeAddSon.txt", "a")                 
+    fichierSon =  open(Maison+"PG_data/ListeAddSon.txt", "a")                 
     try:
         if presente == False:
             if len(slurP) <= 200:
@@ -114,7 +108,7 @@ def Message(auteur666, pigeon, stars , adresse_mail , mdp_mail , botname):
     server = smtplib.SMTP('smtp.gmail.com' , 587)
     # On recupére le message
     message455 = stars + "    >>> " + pigeon + "\n" 
-    sting = open(Maison+"Boite_Reception.txt", "a")
+    sting = open(Maison+"PG_data/Boite_Reception.txt", "a")
     sting.write(message455)
     sting.close()
     Data = msg + message455
@@ -162,14 +156,14 @@ def Dico(addr):
     obj2 = obj1[2]
     obj3 = obj2[0]+obj2[2]
     print("demande de la déffinition de {]".format(obj2))
-    with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTMP: 
+    with open(Maison+"PG_cache/tmp_wikipedia.txt", "w") as fichierTTMP: 
         fichierTTMP.write(json.dumps(obj3))                   
-    with open(Maison+"tmp_wikipedia.txt", "r") as fichierTTTMP:      
+    with open(Maison+"PG_cache/tmp_wikipedia.txt", "r") as fichierTTTMP:      
         definition = fichierTTTMP.readlines()
     for line in definition:
         ss += line
 #            filtre = Repare(ss)
-    with open(Maison+"tmp_wikipedia.txt", "w") as fichierTTTTMP: 
+    with open(Maison+"PG_cache/tmp_wikipedia.txt", "w") as fichierTTTTMP: 
         fichierTTTTMP.write(ss)    
 
     return 
@@ -180,12 +174,12 @@ class Ecriture():
         """ Prends en charge l'ecriture des messages """
     def ecriture(self,*arg):
         """ Ecriture de ce que le bot vois dans le fichier Ecran_Kontrol"""
-        with open(Maison+"Ecran_Kontrol" , "a") as ecran_k:
+        with open(Maison+"PG_cache/Ecran_Kontrol" , "a") as ecran_k:
             ecran_k.write(date+'-'+arg[0])
 
     def mylog(self,error):
         """ Ecriture des erreurs dans le fichier log """
-        with open(Maison+"PragueGolem_log" , "a") as log:
+        with open(Maison+"PG_data/PragueGolem_log" , "a") as log:
             log.write(date+'-'+error+"\n")
 
     def recenssement(self,*arg):
@@ -193,7 +187,7 @@ class Ecriture():
         self.presente = False
         print(arg[0])
         try:
-            with open(Maison+"PragueGolem_recenssement" , "r") as ecran_re:
+            with open(Maison+"PG_data/PragueGolem_recenssement" , "r") as ecran_re:
                 f=ecran_re.readlines() 
                 for e in f:
                     if e.strip() == arg[0]:
@@ -203,6 +197,6 @@ class Ecriture():
             pass
 
         if self.presente == False:
-            with open(Maison+"PragueGolem_recenssement","a") as ecran_:
+            with open(Maison+"PG_data/PragueGolem_recenssement","a") as ecran_:
                 ecran_.write(arg[0]+"\n ")
                 
