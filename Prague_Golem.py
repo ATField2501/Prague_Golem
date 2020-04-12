@@ -6,6 +6,8 @@ import os
 import irclib
 import ircbot
 import time
+from threading import Thread , RLock
+
 from Constantes_secretes import *
 from PragueConstantes import *
 from PragueClasses import *
@@ -16,6 +18,7 @@ print("\n  ---------------- ")
 print("  - Prague_Golem - ")
 print("  ---------------- ")
 print("    version  1.0  \n ")
+
 
 from Prague_bdd_sql import * 
 
@@ -28,11 +31,14 @@ if test == '0':
 else:
     print('screen non installé')
 
+
+verrou = RLock()
+
+
 class PragueGolem(ircbot.SingleServerIRCBot):
     supra = Ecriture()
     # Initialisation de la base de données
 #    bdd = Prague_Connexion()
-    
     def __init__(self): 
         ircbot.SingleServerIRCBot.__init__(self, 
                 [(server_irc_adresse, port , mdp_irc)] ,  botname, botname) 
@@ -62,24 +68,14 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 
 #        PragueGolem.invite_comm(self)
 
-    def invite_comm(self):
-        """ Invite de commande dans le shell """
-        shell_entree=raw_input('>> ')
-        if shell_entree == 'help':
-            with open('PG_data/fichier_help.txt','r') as k:
-                for line in k:
-                    print(line)
-        elif shell_entree == 'vox':
-            serv.privmsg('lymbes', 'vox')
+
 
 
     def rapport(self , serv , ev):
         """ Capture les flux avec le serveur """
-        PragueGolem.supra.mylog(str(ev.eventtype()))
-        PragueGolem.supra.mylog(str(ev.source()))  
-        PragueGolem.supra.mylog(str(ev.target()))
-        PragueGolem.supra.mylog(str(ev.arguments()))
-        
+        PragueGolem.supra.mylog(' '+str(ev.eventtype())+' '\
+                +str(ev.source())+' '+str(ev.arguments()))
+       
 
     def action_repete(self, serv):
         """ Repète une action sur le canal #cthulhu """
@@ -469,10 +465,33 @@ class PragueGolem(ircbot.SingleServerIRCBot):
             if ultimatum in message:
                 pass
 
-       
+#        invite.join()
+
+
+
+class Invite_Commande(Thread):
+    def __init__(self):
+        """ Invite de commande dans le shell """
+        Thread.__init__(self)
+    def run(self):
+        with verrou:
+            while 1:
+                time.sleep(0.2)
+                shell_entree=raw_input('>> ')
+                if shell_entree == 'help':
+                    with open('PG_data/fichier_help.txt','r') as k:
+                        for line in k:
+                            print(line)
+                elif shell_entree == 'vox':
+                    print('Ecriture :: ')
+                    PragueGolem.privmsg('lymbes', 'vox')      
+                elif shell_entree == 'exit':
+                    exit()
 
 
 if __name__ == "__main__":
+#    invite=Invite_Commande()
+#    invite.start()
     PragueGolem().start()
-
+#    invite.join()
 
