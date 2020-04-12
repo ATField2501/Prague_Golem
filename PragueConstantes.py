@@ -11,7 +11,7 @@ mdp_lymbes="dead"
 ## Chemins vers fichiers divers
 PragueG_log="/home/cagliostro/bureau/Prague_Golem_log.txt"
 Ecran_Kontrol="/home/cagliostro/bureau/Prague_Golem_Vision.txt"
-name="name_visiteur.txt"
+name="PG_cache/name_visiteur.txt"
 Tao="/mnt/Nostromo/ATField2501-Repository/TaoTeKing/CaglioOracle.py -o"
 Maison=os.getcwd()+"/"
 ## Phrases Types
@@ -24,5 +24,7 @@ phrase_3=" :::    Méssage Enregistré   :::"
 phrase_4=" :::    Je meurt...   :::"
 phrase_5=" :::    je rentre au Temple  :::"
 phrase_6=" :::    je ne suis qu'un bot  :::"
+## Version
 PG_Version="- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - ^(;,,;)^"
+## api
 wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
