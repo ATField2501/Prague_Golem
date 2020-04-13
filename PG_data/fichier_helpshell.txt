@@ -1,0 +1,12 @@
+Prague_Golem bot irc
+      ^(;,,;)^
+Liste des commandes:
+      help
+      connect
+      disconnect
+      vox
+      init
+      status
+      log
+      ecran
+      exit
