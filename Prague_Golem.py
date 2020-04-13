@@ -15,24 +15,17 @@ from PragueClasses import *
 
 
 print("\n  ---------------- ")
-print("  - Prague_Golem - ")
+print(JAUNE+"  - Prague_Golem - "+VERT)
 print("  ---------------- ")
-print("    version  1.0  \n ")
+print(JAUNE+"    version  1.0  \n "+VERT)
 
 
 from Prague_bdd_sql import * 
 
 ## test de la presence de screen 
 test=os.system("screen -v")
-#test=os.system("echo $?")
-if test == '0':
-    print('screen ok')
-    
-else:
-    print('screen non installé')
-
-
 verrou = RLock()
+
 
 
 class PragueGolem(ircbot.SingleServerIRCBot):
@@ -43,7 +36,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
         ircbot.SingleServerIRCBot.__init__(self, 
                 [(server_irc_adresse, port , mdp_irc)] ,  botname, botname) 
 
-        print("\nserveur    :: {}\nport       :: {}").format(server_irc_adresse , port)
+        print("\nserveur    :: "+JAUNE+"{}"+VERT+"\nport       :: "+JAUNE+"{}"+VERT).format(server_irc_adresse , port)
 
         ## Variables propre à l'objet
         self.goto = ["!goto"]
@@ -77,15 +70,18 @@ class PragueGolem(ircbot.SingleServerIRCBot):
                 +str(ev.source())+' '+str(ev.arguments()))
        
 
-    def action_repete(self, serv):
+    def action_repete(self, serv , nb=60):
         """ Repète une action sur le canal #cthulhu """
+#        nb += 60
+#        moment=time.localtime()
          ### Fait tomber une url youtube au hasard toutes les minutes
-        serv.execute_at(time.time()+60,serv.privmsg, arguments=("#cthulhu","test cycles"))
-    
+        serv.execute_delayed(nb,serv.privmsg, arguments=("#cthulhu","test cycles"))
+#        time.sleep(1)
+        PragueGolem.action_repete(self, serv, nb=nb*2)
     
     def on_welcome(self, serv, ev):
         """ Quant le bot à rejoint le serveur """
-        print("Connection :: ok \n\n")
+        print("Connection :: "+JAUNE+"ok \n\n"+VERT)
         serv.join(chan1)
         serv.join(lymbes , mdp_lymbes)  
 #        serv.join(chan2)
@@ -95,7 +91,7 @@ class PragueGolem(ircbot.SingleServerIRCBot):
 #        serv.privmsg(self,'/list')
         PragueGolem.rapport(self , serv , ev)
      
-        PragueGolem.action_repete(self,serv)   
+#        PragueGolem.action_repete(self,serv)   
    
 
     def on_join(self, serv, ev):
@@ -465,11 +461,9 @@ class PragueGolem(ircbot.SingleServerIRCBot):
             if ultimatum in message:
                 pass
 
-#        invite.join()
 
 
-
-class Invite_Commande(Thread):
+class Invite_Commande(Thread, PragueGolem):
     def __init__(self):
         """ Invite de commande dans le shell """
         Thread.__init__(self)
@@ -477,7 +471,7 @@ class Invite_Commande(Thread):
         with verrou:
             while 1:
                 time.sleep(0.2)
-                shell_entree=raw_input('>> ')
+                shell_entree=raw_input(JAUNE+'>> '+VERT)
                 if shell_entree == 'help':
                     with open('PG_data/fichier_help.txt','r') as k:
                         for line in k:
@@ -489,9 +483,23 @@ class Invite_Commande(Thread):
                     exit()
 
 
+class Repetiteur(Thread,PragueGolem):
+    def __init__(self,serv):
+        """ """
+        Thread.__init__(self)
+    def run(self):
+        with verrou:
+            while 1:
+                serv.privmsg("#cthulhu","test cycles")
+#                time.sleep(60)
+
+
+
+
 if __name__ == "__main__":
 #    invite=Invite_Commande()
 #    invite.start()
     PragueGolem().start()
 #    invite.join()
 
+    Repetiteur().start()

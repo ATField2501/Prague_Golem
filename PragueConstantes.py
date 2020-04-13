@@ -28,3 +28,7 @@ phrase_6=" :::    je ne suis qu'un bot  :::"
 PG_Version="- Prague_Golem - écrit en Python - auteur: Cagliostro - atfield2501@gmail.com - ^(;,,;)^"
 ## api
 wikipedia = "http://fr.wikipedia.org/w/api.php?action=opensearch&search="
+## Couleurs dans shell
+ROUGE="\033[1;31m"
+JAUNE="\033[1;33m"
+VERT="\033[1;32m"
